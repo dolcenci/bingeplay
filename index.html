@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -262,6 +262,8 @@
                     artistItem.appendChild(artistImage);
                     artistItem.appendChild(artistName);
                     artistList.appendChild(artistItem);
+                } else {
+                    console.log(`No user found for artist ID: ${artistId}`);
                 }
             }
         }
