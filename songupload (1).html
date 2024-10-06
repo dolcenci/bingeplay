@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -52,7 +52,7 @@
         .song-list {
             margin-top: 20px;
         }
-     .download-linkpurple {
+        .download-linkpurple {
             display: block;
             padding: 10px 15px;
             background-color: #9b59b6;
@@ -63,11 +63,16 @@
             transition: background-color 0.3s;
             cursor: pointer;
         }
+        .error-message {
+            color: red;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Upload Songs</h1>
+        <div class="error-message" id="errorMessage" style="display: none;"></div>
         <div class="form-group">
             <input type="text" id="songTitle" placeholder="Song Title" required>
             <input type="text" id="artistName" placeholder="Artist Name" required>
@@ -75,8 +80,8 @@
             <input type="file" id="audioUpload" accept="audio/*" required>
             <input type="file" id="coverUpload" accept="image/*" required>
             <button class="upload-button" id="uploadButton">Upload Song</button>
-         <li><a class="download-linkpurple" href="songplayer.html" >music player</a></li>
-         <li><a class="download-linkpurple" href="index.html" >index</a></li>
+            <li><a class="download-linkpurple" href="songplayer.html">Music Player</a></li>
+            <li><a class="download-linkpurple" href="index.html">Index</a></li>
         </div>
 
         <div class="song-list" id="songList">
@@ -89,21 +94,23 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-storage.js";
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
-    authDomain: "binge-play.firebaseapp.com",
-    databaseURL: "https://binge-play-default-rtdb.firebaseio.com",
-    projectId: "binge-play",
-    storageBucket: "binge-play.appspot.com",
-    messagingSenderId: "50709965408",
-    appId: "1:50709965408:web:bcb17a6ce85500f39df105"
+            authDomain: "binge-play.firebaseapp.com",
+            databaseURL: "https://binge-play-default-rtdb.firebaseio.com",
+            projectId: "binge-play",
+            storageBucket: "binge-play.appspot.com",
+            messagingSenderId: "50709965408",
+            appId: "1:50709965408:web:bcb17a6ce85500f39df105"
         };
 
         const app = initializeApp(firebaseConfig);
         const storage = getStorage(app);
         const firestore = getFirestore(app);
+        const auth = getAuth(app);
 
         const uploadButton = document.getElementById('uploadButton');
         const songTitle = document.getElementById('songTitle');
@@ -112,8 +119,19 @@
         const audioUpload = document.getElementById('audioUpload');
         const coverUpload = document.getElementById('coverUpload');
         const songList = document.getElementById('songList');
+        const errorMessage = document.getElementById('errorMessage');
 
         uploadButton.addEventListener('click', async () => {
+            // Check if user is logged in
+            const user = auth.currentUser;
+            if (!user) {
+                errorMessage.textContent = 'You must be logged in to upload songs.';
+                errorMessage.style.display = 'block';
+                return;
+            } else {
+                errorMessage.style.display = 'none'; // Hide error message if user is logged in
+            }
+
             const audioFile = audioUpload.files[0];
             const coverFile = coverUpload.files[0];
 
