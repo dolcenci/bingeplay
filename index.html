@@ -1,4 +1,4 @@
- <!DOCTYPE html>  
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -206,7 +206,7 @@
     <!-- Import Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
@@ -235,27 +235,36 @@
             const querySnapshot = await getDocs(collection(firestore, 'songs'));
             const artists = new Map();
 
+            // Gather artists and their songs
             querySnapshot.forEach((doc) => {
                 const songData = doc.data();
                 if (!artists.has(songData.artist)) {
-                    artists.set(songData.artist, songData.artistImageURL); // Assuming artistImageURL is stored in the song document
+                    artists.set(songData.artist, songData.artistId); // Store artist ID for later use
                     songsData.push(songData); // Store song data
                 }
             });
 
-            artists.forEach((imageURL, artist) => {
-                const artistItem = document.createElement('div');
-                artistItem.className = 'artist-item';
-                
-                const artistImage = document.createElement('img');
-                artistImage.src = imageURL; // Use the artist's image URL
-                artistImage.alt = artist;
+            // Now fetch user data for each artist
+            for (const [artist, artistId] of artists.entries()) {
+                const userDoc = await getDoc(doc(firestore, 'users', artistId)); // Assuming artistId is the UID
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    const artistItem = document.createElement('div');
+                    artistItem.className = 'artist-item';
+                    artistItem.onclick = () => displaySongsByArtist(artist);
+                    
+                    const artistImage = document.createElement('img');
+                    artistImage.src = userData.photoURL; // Fetching profile image
+                    artistImage.alt = `${artist}'s profile picture`;
 
-                artistItem.appendChild(artistImage);
-                artistItem.appendChild(document.createTextNode(artist));
-                artistItem.addEventListener('click', () => displaySongsByArtist(artist));
-                artistList.appendChild(artistItem);
-            });
+                    const artistName = document.createElement('span');
+                    artistName.textContent = artist;
+
+                    artistItem.appendChild(artistImage);
+                    artistItem.appendChild(artistName);
+                    artistList.appendChild(artistItem);
+                }
+            }
         }
 
         async function displaySongsByArtist(artist) {
@@ -288,9 +297,7 @@
                     playButton.textContent = "Play";
                     playButton.onclick = async () => {
                         playSong(songData.audioURL);
-
-                        // Increment plays in Firebase
-                        const currentPlays = songData.plays + 1; // Increment in local context
+                        const currentPlays = songData.plays + 1;
                         await updateDoc(doc.ref, { plays: currentPlays });
                         playsElement.textContent = `Plays: ${currentPlays}`;
                     };
