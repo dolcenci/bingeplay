@@ -96,7 +96,7 @@
             color: white;
         }
         .artist-item img {
-            width: 40px; /* Size of artist profile image */
+            width: 40px;
             height: 40px;
             border-radius: 50%;
             margin-right: 10px;
@@ -120,7 +120,7 @@
             background-color: #333;
         }
         .song-cover {
-            width: 50px; /* Reduced size for song cover */
+            width: 50px;
             height: 50px;
             margin-right: 15px;
             border-radius: 5px;
@@ -254,8 +254,7 @@
                     artistItem.onclick = () => displaySongsByArtist(artist);
                     
                     const artistImage = document.createElement('img');
-                    artistImage.src = userData.photoURL; // Fetching profile image
-                    artistImage.alt = `${artist}'s profile picture`;
+                    artistImage.src = userData.photoURL || 'default-image-url.jpg'; // Fallback image
 
                     const artistName = document.createElement('span');
                     artistName.textContent = artist;
@@ -278,8 +277,7 @@
                     songItem.className = 'song-item';
 
                     const coverImage = document.createElement('img');
-                    coverImage.src = songData.coverURL;
-                    coverImage.className = 'song-cover';
+                    coverImage.src = songData.coverURL || 'default-cover-url.jpg'; // Fallback image
 
                     const titleElement = document.createElement('h3');
                     titleElement.textContent = songData.title;
