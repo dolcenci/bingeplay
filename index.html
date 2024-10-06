@@ -256,11 +256,7 @@
                     const artistImage = document.createElement('img');
                     artistImage.src = userData.photoURL || 'default-image-url.jpg'; // Fallback image
 
-                    const artistName = document.createElement('span');
-                    artistName.textContent = artist;
-
                     artistItem.appendChild(artistImage);
-                    artistItem.appendChild(artistName);
                     artistList.appendChild(artistItem);
                 } else {
                     console.log(`No user found for artist ID: ${artistId}`);
