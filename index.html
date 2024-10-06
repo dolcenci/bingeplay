@@ -1,0 +1,379 @@
+ <!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Artists and Songs</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #111727;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        .sidebar {
+            width: 25%;
+            height: 80%;
+            background-color: #111727;
+            color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .container {
+            width: 75%;
+            max-width: 800px;
+            background-color: #111727;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: white;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #1e1e2f;
+            border-radius: 8px;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        .search-bar {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+        }
+        .suggestions {
+            position: absolute;
+            background-color: #1e1e2f;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            z-index: 10;
+            max-height: 150px;
+            overflow-y: auto;
+            width: 100%;
+            display: none;
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+            color: white;
+        }
+        .suggestion-item:hover {
+            background-color: #333;
+        }
+        .artist-list, .radio-station-list, .song-list, .radio-player {
+            background-color: #111727;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .artist-item, .radio-station-item {
+            cursor: pointer;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: white;
+        }
+        .artist-item:hover, .radio-station-item:hover {
+            background-color: #e0e0e0;
+            color: black;
+        }
+        .song-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: white;
+            background-color: #1e1e2f;
+        }
+        .song-item:hover {
+            background-color: #333;
+        }
+        .song-cover {
+            width: 50px; /* Reduced size for song cover */
+            height: 50px;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+        .song-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        audio {
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 5px;
+            background-color: #f3f3f3;
+            border: none;
+            outline: none;
+            height: 45px;
+        }
+        audio::-webkit-media-controls {
+            background-color: #1db954;
+            border-radius: 5px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #1db954;
+        }
+        audio::-webkit-media-controls-play-button,
+        audio::-webkit-media-controls-volume-slider {
+            background-color: #1db954;
+        }
+        .song-actions {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .song-actions button {
+            margin-right: 10px;
+            background: none;
+            border: none;
+            color: #1db954;
+            cursor: pointer;
+        }
+        .song-actions button:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Sidebar</h2>
+        <p>Navigation or other content can go here.</p>
+    </div>
+    <div class="container">
+        <div class="nav">
+            <div>
+                <a href="#">Home</a>
+                <a href="#">Podcasts</a>
+                <a href="#">Internet Radio</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search artists or songs..." />
+                <div class="suggestions" id="suggestionsList"></div>
+            </div>
+        </div>
+        
+        <h1>Artists</h1>
+        <div class="artist-list" id="artistList"></div>
+        <div class="song-list" id="songList"></div>
+        
+        <h2>Top Internet Radio Stations</h2>
+        <div class="radio-station-list" id="radioStationList"></div>
+        
+        <div class="radio-player" id="radioPlayer">
+            <h3>Now Playing</h3>
+            <audio id="radioAudio" controls>
+                <source id="radioSource" src="" type="audio/mpeg">
+                Your browser does not support the audio tag.
+            </audio>
+        </div>
+    </div>
+
+    <!-- Import Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD7jn56HDd6nME3dommemdPJHFaKHpjuhY",
+            authDomain: "prosper-a9810.firebaseapp.com",
+            projectId: "prosper-a9810",
+            storageBucket: "prosper-a9810.appspot.com",
+            messagingSenderId: "1040350127188",
+            appId: "1:1040350127188:web:da8987386085d778eaf9cl1",
+            measurementId: "G-6G8BMD6S3G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const firestore = getFirestore(app);
+
+        const artistList = document.getElementById('artistList');
+        const songList = document.getElementById('songList');
+        const radioStationList = document.getElementById('radioStationList');
+        const radioAudio = document.getElementById('radioAudio');
+        const radioSource = document.getElementById('radioSource');
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsList = document.getElementById('suggestionsList');
+
+        const songsData = []; // Store songs data for searching
+
+        async function displayArtists() {
+            const querySnapshot = await getDocs(collection(firestore, 'songs'));
+            const artists = new Set();
+
+            querySnapshot.forEach((doc) => {
+                const songData = doc.data();
+                artists.add(songData.artist);
+                songsData.push(songData); // Store song data
+            });
+
+            artists.forEach(artist => {
+                const artistItem = document.createElement('div');
+                artistItem.className = 'artist-item';
+                artistItem.textContent = artist;
+                artistItem.addEventListener('click', () => displaySongsByArtist(artist));
+                artistList.appendChild(artistItem);
+            });
+        }
+
+        async function displaySongsByArtist(artist) {
+            songList.innerHTML = `<h2>Songs by ${artist}</h2>`;
+            const querySnapshot = await getDocs(collection(firestore, 'songs'));
+
+            querySnapshot.forEach((doc) => {
+                const songData = doc.data();
+                if (songData.artist === artist) {
+                    const songItem = document.createElement('div');
+                    songItem.className = 'song-item';
+
+                    const coverImage = document.createElement('img');
+                    coverImage.src = songData.coverURL;
+                    coverImage.className = 'song-cover';
+
+                    const titleElement = document.createElement('h3');
+                    titleElement.textContent = songData.title;
+
+                    const descriptionElement = document.createElement('p');
+                    descriptionElement.textContent = songData.description;
+
+                    const playsElement = document.createElement('p');
+                    playsElement.textContent = `Plays: ${songData.plays}`;
+
+                    const heartsElement = document.createElement('p');
+                    heartsElement.textContent = `Hearts: ${songData.hearts}`;
+
+                    const playButton = document.createElement('button');
+                    playButton.textContent = "Play";
+                    playButton.onclick = async () => {
+                        playSong(songData.audioURL);
+
+                        // Increment plays in Firebase
+                        const currentPlays = songData.plays + 1; // Increment in local context
+                        await updateDoc(doc.ref, { plays: currentPlays });
+                        playsElement.textContent = `Plays: ${currentPlays}`;
+                    };
+
+                    const heartButton = document.createElement('button');
+                    heartButton.textContent = "❤️";
+                    heartButton.onclick = async () => {
+                        const currentHearts = songData.hearts + (heartButton.classList.toggle('active') ? 1 : -1);
+                        await updateDoc(doc.ref, { hearts: currentHearts });
+                        heartsElement.textContent = `Hearts: ${currentHearts}`;
+                    };
+
+                    const songDetails = document.createElement('div');
+                    songDetails.className = 'song-details';
+                    songDetails.appendChild(titleElement);
+                    songDetails.appendChild(descriptionElement);
+                    songDetails.appendChild(playsElement);
+                    songDetails.appendChild(heartsElement);
+                    
+                    const songActions = document.createElement('div');
+                    songActions.className = 'song-actions';
+                    songActions.appendChild(playButton);
+                    songActions.appendChild(heartButton);
+
+                    songItem.appendChild(coverImage);
+                    songItem.appendChild(songDetails);
+                    songItem.appendChild(songActions);
+                    songList.appendChild(songItem);
+                }
+            });
+        }
+
+        function displaySuggestions(query) {
+            suggestionsList.innerHTML = '';
+            const filteredSongs = songsData.filter(song => 
+                song.title.toLowerCase().includes(query.toLowerCase()) ||
+                song.artist.toLowerCase().includes(query.toLowerCase())
+            );
+
+            if (filteredSongs.length > 0) {
+                suggestionsList.style.display = 'block';
+                filteredSongs.forEach(song => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.className = 'suggestion-item';
+                    suggestionItem.textContent = `${song.artist} - ${song.title}`;
+                    suggestionItem.addEventListener('click', () => {
+                        playSong(song.audioURL);
+                        suggestionsList.style.display = 'none'; // Hide suggestions after selection
+                    });
+                    suggestionsList.appendChild(suggestionItem);
+                });
+            } else {
+                suggestionsList.style.display = 'none';
+            }
+        }
+
+        function playSong(url) {
+            radioSource.src = url;
+            radioAudio.load();
+            radioAudio.play();
+        }
+
+        function displayRadioStations() {
+            const stations = [
+                { name: "Radio Paradise", url: "http://stream.radioparadise.com/aac-320" },
+                { name: "Magic 8 Ball Radio", url: "http://streaming.magic8ball.com:8000/stream" },
+                { name: "WRFG 89.3 FM", url: "http://wrfg.org:8000/wrfg" },
+                { name: "KZSU Stanford", url: "http://kzsu.stanford.edu:8000/kzsu" },
+                { name: "Radio Free Europe", url: "http://rfe.rferl.org/rfe/128k.mp3" }
+            ];
+
+            stations.forEach(station => {
+                const stationItem = document.createElement('div');
+                stationItem.className = 'radio-station-item';
+                stationItem.textContent = station.name; 
+                stationItem.addEventListener('click', () => playRadio(station.url));
+                radioStationList.appendChild(stationItem);
+            });
+        }
+
+        function playRadio(url) {
+            radioSource.src = url;
+            radioAudio.load();
+            radioAudio.play();
+        }
+
+        // Load artists and radio stations on page load
+        window.onload = () => {
+            displayArtists();
+            displayRadioStations();
+        };
+
+        // Search functionality
+        searchInput.addEventListener('input', (event) => {
+            const query = event.target.value;
+            if (query) {
+                displaySuggestions(query);
+            } else {
+                suggestionsList.style.display = 'none'; // Hide suggestions if input is empty
+            }
+        });
+    </script>
+</body>
+</html>
