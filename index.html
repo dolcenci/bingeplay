@@ -1,4 +1,4 @@
-  <!DOCTYPE html> 
+ <!DOCTYPE html>  
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -84,7 +84,9 @@
             border-radius: 8px;
             margin-bottom: 20px;
         }
-        .artist-item, .radio-station-item {
+        .artist-item {
+            display: flex;
+            align-items: center;
             cursor: pointer;
             margin: 5px 0;
             padding: 10px;
@@ -93,7 +95,13 @@
             transition: background-color 0.3s;
             color: white;
         }
-        .artist-item:hover, .radio-station-item:hover {
+        .artist-item img {
+            width: 40px; /* Size of artist profile image */
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .artist-item:hover {
             background-color: #e0e0e0;
             color: black;
         }
@@ -170,10 +178,8 @@
                 <a href="#">Home</a>
                 <a href="#">Podcasts</a>
                 <a href="#">Internet Radio</a>
-              <a href="signup.html">sin up</a>
-              <a href="songupload.html">sonupload</a>
-
-               
+                <a href="signup.html">Sign Up</a>
+                <a href="songupload.html">Upload Song</a>
             </div>
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search artists or songs..." />
@@ -204,12 +210,12 @@
 
         const firebaseConfig = {
             apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
-    authDomain: "binge-play.firebaseapp.com",
-    databaseURL: "https://binge-play-default-rtdb.firebaseio.com",
-    projectId: "binge-play",
-    storageBucket: "binge-play.appspot.com",
-    messagingSenderId: "50709965408",
-    appId: "1:50709965408:web:bcb17a6ce85500f39df105"
+            authDomain: "binge-play.firebaseapp.com",
+            databaseURL: "https://binge-play-default-rtdb.firebaseio.com",
+            projectId: "binge-play",
+            storageBucket: "binge-play.appspot.com",
+            messagingSenderId: "50709965408",
+            appId: "1:50709965408:web:bcb17a6ce85500f39df105"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -227,18 +233,26 @@
 
         async function displayArtists() {
             const querySnapshot = await getDocs(collection(firestore, 'songs'));
-            const artists = new Set();
+            const artists = new Map();
 
             querySnapshot.forEach((doc) => {
                 const songData = doc.data();
-                artists.add(songData.artist);
-                songsData.push(songData); // Store song data
+                if (!artists.has(songData.artist)) {
+                    artists.set(songData.artist, songData.artistImageURL); // Assuming artistImageURL is stored in the song document
+                    songsData.push(songData); // Store song data
+                }
             });
 
-            artists.forEach(artist => {
+            artists.forEach((imageURL, artist) => {
                 const artistItem = document.createElement('div');
                 artistItem.className = 'artist-item';
-                artistItem.textContent = artist;
+                
+                const artistImage = document.createElement('img');
+                artistImage.src = imageURL; // Use the artist's image URL
+                artistImage.alt = artist;
+
+                artistItem.appendChild(artistImage);
+                artistItem.appendChild(document.createTextNode(artist));
                 artistItem.addEventListener('click', () => displaySongsByArtist(artist));
                 artistList.appendChild(artistItem);
             });
