@@ -1,10 +1,10 @@
-<!DOCTYPE html> 
+  <!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Artists and Songs</title>
-    <style>   
+    <style>
         body {
             display: flex;
             justify-content: flex-start;
@@ -203,7 +203,7 @@
         import { getFirestore, collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
+           apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
     authDomain: "binge-play.firebaseapp.com",
     databaseURL: "https://binge-play-default-rtdb.firebaseio.com",
     projectId: "binge-play",
@@ -245,7 +245,7 @@
         }
 
         async function displaySongsByArtist(artist) {
-            songList.innerHTML = <h2>Songs by ${artist}</h2>;
+            songList.innerHTML = `<h2>Songs by ${artist}</h2>`;
             const querySnapshot = await getDocs(collection(firestore, 'songs'));
 
             querySnapshot.forEach((doc) => {
@@ -265,10 +265,10 @@
                     descriptionElement.textContent = songData.description;
 
                     const playsElement = document.createElement('p');
-                    playsElement.textContent = Plays: ${songData.plays};
+                    playsElement.textContent = `Plays: ${songData.plays}`;
 
                     const heartsElement = document.createElement('p');
-                    heartsElement.textContent = Hearts: ${songData.hearts};
+                    heartsElement.textContent = `Hearts: ${songData.hearts}`;
 
                     const playButton = document.createElement('button');
                     playButton.textContent = "Play";
@@ -278,7 +278,7 @@
                         // Increment plays in Firebase
                         const currentPlays = songData.plays + 1; // Increment in local context
                         await updateDoc(doc.ref, { plays: currentPlays });
-                        playsElement.textContent = Plays: ${currentPlays};
+                        playsElement.textContent = `Plays: ${currentPlays}`;
                     };
 
                     const heartButton = document.createElement('button');
@@ -286,7 +286,7 @@
                     heartButton.onclick = async () => {
                         const currentHearts = songData.hearts + (heartButton.classList.toggle('active') ? 1 : -1);
                         await updateDoc(doc.ref, { hearts: currentHearts });
-                        heartsElement.textContent = Hearts: ${currentHearts};
+                        heartsElement.textContent = `Hearts: ${currentHearts}`;
                     };
 
                     const songDetails = document.createElement('div');
@@ -321,7 +321,7 @@
                 filteredSongs.forEach(song => {
                     const suggestionItem = document.createElement('div');
                     suggestionItem.className = 'suggestion-item';
-                    suggestionItem.textContent = ${song.artist} - ${song.title};
+                    suggestionItem.textContent = `${song.artist} - ${song.title}`;
                     suggestionItem.addEventListener('click', () => {
                         playSong(song.audioURL);
                         suggestionsList.style.display = 'none'; // Hide suggestions after selection
@@ -380,4 +380,5 @@
         });
     </script>
 </body>
-</html> 
+</html>
+             
