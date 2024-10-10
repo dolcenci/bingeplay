@@ -138,8 +138,21 @@
                 const songItem = document.createElement('div');
                 songItem.className = 'song-item';
                 songItem.textContent = `${song.title} by ${song['artist-credit'][0].name}`;
+                
+                // Add click event to play song
+                songItem.onclick = () => {
+                    const previewUrl = `https://api.soundslice.com/slice/preview/${song.id}`;
+                    playSong(previewUrl);
+                };
+
                 songList.appendChild(songItem);
             });
+        }
+
+        function playSong(url) {
+            radioSource.src = url;
+            radioAudio.load();
+            radioAudio.play();
         }
 
         function displayRadioStations() {
