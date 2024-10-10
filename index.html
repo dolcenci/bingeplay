@@ -48,7 +48,7 @@
             text-decoration: none;
             margin: 0 15px;
         }
-        .artist-list, .song-list, .radio-station-list, .top-songs-list {
+        .artist-list, .song-list, .radio-station-list {
             background-color: #111727;
             padding: 15px;
             border-radius: 8px;
@@ -66,11 +66,6 @@
         .artist-item:hover, .song-item:hover {
             background-color: #e0e0e0;
             color: black;
-        }
-        .song-details {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
         }
     </style>
 </head>
@@ -95,7 +90,7 @@
         <div class="artist-list" id="artistList"></div>
 
         <h1>Top Songs</h1>
-        <div class="top-songs-list" id="topSongsList"></div>
+        <div class="song-list" id="songList"></div>
 
         <div class="radio-station-list" id="radioStationList"></div>
 
@@ -108,33 +103,17 @@
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
-            authDomain: "binge-play.firebaseapp.com",
-            databaseURL: "https://binge-play-default-rtdb.firebaseio.com",
-            projectId: "binge-play",
-            storageBucket: "binge-play.appspot.com",
-            messagingSenderId: "50709965408",
-            appId: "1:50709965408:web:bcb17a6ce85500f39df105"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const firestore = getFirestore(app);
-
+    <script>
         const artistList = document.getElementById('artistList');
-        const topSongsList = document.getElementById('topSongsList');
+        const songList = document.getElementById('songList');
         const radioStationList = document.getElementById('radioStationList');
         const radioAudio = document.getElementById('radioAudio');
         const radioSource = document.getElementById('radioSource');
 
         async function fetchTopArtists() {
-            const response = await fetch('https://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&api_key=YOUR_LASTFM_API_KEY&format=json');
+            const response = await fetch('https://musicbrainz.org/ws/2/artist?query=*&limit=5&fmt=json');
             const data = await response.json();
-            displayTopArtists(data.artists.artist);
+            displayTopArtists(data.artists);
         }
 
         function displayTopArtists(artists) {
@@ -148,18 +127,18 @@
         }
 
         async function fetchTopSongs() {
-            const response = await fetch('https://ws.audioscrobbler.com/2.0/?method=chart.gettopsongs&api_key=YOUR_LASTFM_API_KEY&format=json');
+            const response = await fetch('https://musicbrainz.org/ws/2/recording?query=*&limit=5&fmt=json');
             const data = await response.json();
-            displayTopSongs(data.tracks.track);
+            displayTopSongs(data.recordings);
         }
 
         function displayTopSongs(songs) {
-            topSongsList.innerHTML = ''; // Clear existing songs
+            songList.innerHTML = ''; // Clear existing songs
             songs.forEach(song => {
                 const songItem = document.createElement('div');
                 songItem.className = 'song-item';
-                songItem.textContent = `${song.name} by ${song.artist.name}`;
-                topSongsList.appendChild(songItem);
+                songItem.textContent = `${song.title} by ${song['artist-credit'][0].name}`;
+                songList.appendChild(songItem);
             });
         }
 
@@ -189,8 +168,8 @@
 
         // Load artists, songs, and radio stations on page load
         window.onload = async () => {
-            fetchTopArtists();
-            fetchTopSongs();
+            await fetchTopArtists();
+            await fetchTopSongs();
             displayRadioStations();
         };
     </script>
