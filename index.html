@@ -31,16 +31,16 @@
             border-radius: 8px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
-        h1, h2, h3 {
+        h1, h2 {
             color: white;
         }
-        .artist-list, .song-list {
+        .song-list {
             background-color: #111727;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
         }
-        .artist-item, .song-item {
+        .song-item {
             cursor: pointer;
             margin: 5px 0;
             padding: 10px;
@@ -49,7 +49,7 @@
             transition: background-color 0.3s;
             color: white;
         }
-        .artist-item:hover, .song-item:hover {
+        .song-item:hover {
             background-color: #e0e0e0;
             color: black;
         }
@@ -93,7 +93,7 @@
                 
                 // Add click event to play song
                 songItem.onclick = () => {
-                    playSong(song.download_url); // Use the download URL to play
+                    playSong(song.file_url); // Use the file URL to play
                 };
 
                 songList.appendChild(songItem);
