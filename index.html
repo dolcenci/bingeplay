@@ -1,10 +1,10 @@
-<!DOCTYPE html>   
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Artists and Songs</title>
-    <style>   
+    <style>
         body {
             display: flex;
             justify-content: flex-start;
@@ -34,21 +34,7 @@
         h1, h2, h3 {
             color: white;
         }
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #1e1e2f;
-            border-radius: 8px;
-        }
-        .nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-        }
-        .artist-list, .song-list, .radio-station-list {
+        .artist-list, .song-list {
             background-color: #111727;
             padding: 15px;
             border-radius: 8px;
@@ -75,24 +61,8 @@
         <p>Navigation or other content can go here.</p>
     </div>
     <div class="container">
-        <div class="nav">
-            <div>
-                <a href="#">Home</a>
-                <a href="#">Podcasts</a>
-                <a href="#">Internet Radio</a>
-                <a href="profile.html">Profile</a>
-                <a href="signup.html">Sign Up</a>
-                <a href="songupload.html">Song Upload</a>
-            </div>
-        </div>
-        
-        <h1>Top Artists</h1>
-        <div class="artist-list" id="artistList"></div>
-
         <h1>Top Songs</h1>
         <div class="song-list" id="songList"></div>
-
-        <div class="radio-station-list" id="radioStationList"></div>
 
         <div class="radio-player" id="radioPlayer">
             <h3>Now Playing</h3>
@@ -104,32 +74,14 @@
     </div>
 
     <script>
-        const artistList = document.getElementById('artistList');
         const songList = document.getElementById('songList');
-        const radioStationList = document.getElementById('radioStationList');
         const radioAudio = document.getElementById('radioAudio');
         const radioSource = document.getElementById('radioSource');
 
-        async function fetchTopArtists() {
-            const response = await fetch('https://musicbrainz.org/ws/2/artist?query=*&limit=5&fmt=json');
-            const data = await response.json();
-            displayTopArtists(data.artists);
-        }
-
-        function displayTopArtists(artists) {
-            artistList.innerHTML = ''; // Clear existing artists
-            artists.forEach(artist => {
-                const artistItem = document.createElement('div');
-                artistItem.className = 'artist-item';
-                artistItem.textContent = artist.name;
-                artistList.appendChild(artistItem);
-            });
-        }
-
         async function fetchTopSongs() {
-            const response = await fetch('https://musicbrainz.org/ws/2/recording?query=*&limit=5&fmt=json');
+            const response = await fetch('https://freemusicarchive.org/api/get/tracks.json?api_key=YOUR_API_KEY&limit=10');
             const data = await response.json();
-            displayTopSongs(data.recordings);
+            displayTopSongs(data.data);
         }
 
         function displayTopSongs(songs) {
@@ -137,12 +89,11 @@
             songs.forEach(song => {
                 const songItem = document.createElement('div');
                 songItem.className = 'song-item';
-                songItem.textContent = `${song.title} by ${song['artist-credit'][0].name}`;
+                songItem.textContent = `${song.title} by ${song.artist}`;
                 
                 // Add click event to play song
                 songItem.onclick = () => {
-                    const previewUrl = `https://api.soundslice.com/slice/preview/${song.id}`;
-                    playSong(previewUrl);
+                    playSong(song.download_url); // Use the download URL to play
                 };
 
                 songList.appendChild(songItem);
@@ -155,35 +106,9 @@
             radioAudio.play();
         }
 
-        function displayRadioStations() {
-            const stations = [
-                { name: "Radio Paradise", url: "http://stream.radioparadise.com/aac-320" },
-                { name: "Magic 8 Ball Radio", url: "http://streaming.magic8ball.com:8000/stream" },
-                { name: "WRFG 89.3 FM", url: "http://wrfg.org:8000/wrfg" },
-                { name: "KZSU Stanford", url: "http://kzsu.stanford.edu:8000/kzsu" },
-                { name: "Radio Free Europe", url: "http://rfe.rferl.org/rfe/128k.mp3" }
-            ];
-
-            stations.forEach(station => {
-                const stationItem = document.createElement('div');
-                stationItem.className = 'radio-station-item';
-                stationItem.textContent = station.name; 
-                stationItem.addEventListener('click', () => playRadio(station.url));
-                radioStationList.appendChild(stationItem);
-            });
-        }
-
-        function playRadio(url) {
-            radioSource.src = url;
-            radioAudio.load();
-            radioAudio.play();
-        }
-
-        // Load artists, songs, and radio stations on page load
+        // Load songs on page load
         window.onload = async () => {
-            await fetchTopArtists();
             await fetchTopSongs();
-            displayRadioStations();
         };
     </script>
 </body>
