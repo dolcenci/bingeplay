@@ -3,113 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Artists and Songs</title>
+    <title>Simple Music Player</title>
     <style>
         body {
             display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #111727;
-            font-family: Arial, sans-serif;
-            color: white;
-        }
-        .sidebar {
-            width: 25%;
-            height: 80%;
-            background-color: #111727;
+            background-color: #111;
             color: #fff;
-            padding: 20px;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            font-family: Arial, sans-serif;
         }
-        .container {
-            width: 75%;
-            max-width: 800px;
-            background-color: #111727;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2 {
-            color: white;
+        h1 {
+            margin: 20px 0;
         }
         .song-list {
-            background-color: #111727;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            list-style-type: none;
+            padding: 0;
+            width: 300px;
         }
         .song-item {
-            cursor: pointer;
+            background-color: #222;
             margin: 5px 0;
             padding: 10px;
-            border: 1px solid #ccc;
+            cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s;
-            color: white;
+            transition: background 0.3s;
         }
         .song-item:hover {
-            background-color: #e0e0e0;
-            color: black;
+            background-color: #333;
+        }
+        audio {
+            margin-top: 20px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Sidebar</h2>
-        <p>Navigation or other content can go here.</p>
-    </div>
-    <div class="container">
-        <h1>Top Songs</h1>
-        <div class="song-list" id="songList"></div>
 
-        <div class="radio-player" id="radioPlayer">
-            <h3>Now Playing</h3>
-            <audio id="radioAudio" controls>
-                <source id="radioSource" src="" type="audio/mpeg">
-                Your browser does not support the audio tag.
-            </audio>
-        </div>
-    </div>
+    <h1>Simple Music Player</h1>
+    <ul class="song-list" id="songList"></ul>
+
+    <audio id="audioPlayer" controls>
+        <source id="audioSource" src="" type="audio/mpeg">
+        Your browser does not support the audio tag.
+    </audio>
 
     <script>
-        const songList = document.getElementById('songList');
-        const radioAudio = document.getElementById('radioAudio');
-        const radioSource = document.getElementById('radioSource');
+        const songListElement = document.getElementById('songList');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const audioSource = document.getElementById('audioSource');
 
-        async function fetchTopSongs() {
-            const response = await fetch('https://freemusicarchive.org/api/get/tracks.json?api_key=YOUR_API_KEY&limit=10');
+        async function fetchSongs() {
+            const response = await fetch('https://api.publicdomainproject.org/track/?limit=10');
             const data = await response.json();
-            displayTopSongs(data.data);
+            displaySongs(data.results);
         }
 
-        function displayTopSongs(songs) {
-            songList.innerHTML = ''; // Clear existing songs
+        function displaySongs(songs) {
+            songListElement.innerHTML = ''; // Clear existing songs
             songs.forEach(song => {
-                const songItem = document.createElement('div');
+                const songItem = document.createElement('li');
                 songItem.className = 'song-item';
                 songItem.textContent = `${song.title} by ${song.artist}`;
                 
-                // Add click event to play song
                 songItem.onclick = () => {
-                    playSong(song.file_url); // Use the file URL to play
+                    playSong(song.file_url); // Play the song
                 };
 
-                songList.appendChild(songItem);
+                songListElement.appendChild(songItem);
             });
         }
 
         function playSong(url) {
-            radioSource.src = url;
-            radioAudio.load();
-            radioAudio.play();
+            audioSource.src = url;
+            audioPlayer.load();
+            audioPlayer.play();
         }
 
         // Load songs on page load
-        window.onload = async () => {
-            await fetchTopSongs();
-        };
+        window.onload = fetchSongs;
     </script>
+
 </body>
 </html>
