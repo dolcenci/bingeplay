@@ -182,10 +182,6 @@
         
         <h1>Artists</h1>
         <div class="artist-list" id="artistList"></div>
-        
-        <h2>Your Top Artists</h2>
-        <div class="top-artists" id="topArtistsList"></div>
-
         <div class="song-list" id="songList"></div>
         
         <h2>Top Internet Radio Stations</h2>
@@ -225,7 +221,6 @@
         const radioSource = document.getElementById('radioSource');
         const searchInput = document.getElementById('searchInput');
         const suggestionsList = document.getElementById('suggestionsList');
-        const topArtistsList = document.getElementById('topArtistsList');
 
         const songsData = []; // Store songs data for searching
 
@@ -259,7 +254,7 @@
                     songItem.className = 'song-item';
 
                     const coverImage = document.createElement('img');
-                    coverImage.src = songData.coverImageURL;
+                    coverImage.src = songData.coverURL;
                     coverImage.className = 'song-cover';
 
                     const titleElement = document.createElement('h3');
@@ -374,7 +369,7 @@
 
         async function getSpotifyAccessToken() {
             const token = localStorage.getItem('spotify_access_token');
-            if (token) return token;
+            if (token) return token; // If a token already exists, return it
 
             const hash = window.location.hash;
             if (hash) {
@@ -387,6 +382,7 @@
                 }
             }
 
+            // If no token is available, redirect to Spotify authorization
             const authUrl = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(SCOPES)}&response_type=token`;
             window.location.href = authUrl;
         }
@@ -406,7 +402,7 @@
         }
 
         function displayTopArtists(artists) {
-            topArtistsList.innerHTML = ''; // Clear existing top artists
+            artistList.innerHTML = ''; // Clear existing artists
 
             artists.forEach(artist => {
                 const artistItem = document.createElement('div');
@@ -419,7 +415,7 @@
                 playButton.onclick = () => playArtistTopSong(artist.id);
                 
                 artistItem.appendChild(playButton);
-                topArtistsList.appendChild(artistItem);
+                artistList.appendChild(artistItem);
             });
         }
 
