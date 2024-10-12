@@ -268,31 +268,29 @@
             });
         }
 
-        async function displaySongsByArtist(artist) {
+        async function displaySongs() {
             songGrid.innerHTML = ''; // Clear previous songs
             const querySnapshot = await getDocs(collection(firestore, 'songs'));
 
             querySnapshot.forEach((doc) => {
                 const songData = doc.data();
-                if (songData.artist === artist) {
-                    const songItem = document.createElement('div');
-                    songItem.className = 'song-grid-item';
+                const songItem = document.createElement('div');
+                songItem.className = 'song-grid-item';
 
-                    const coverImage = document.createElement('img');
-                    coverImage.src = songData.coverURL;
-                    coverImage.className = 'song-grid-cover';
+                const coverImage = document.createElement('img');
+                coverImage.src = songData.coverURL;
+                coverImage.className = 'song-grid-cover';
 
-                    const titleElement = document.createElement('h3');
-                    titleElement.textContent = songData.title;
+                const titleElement = document.createElement('h3');
+                titleElement.textContent = songData.title;
 
-                    const artistElement = document.createElement('p');
-                    artistElement.textContent = songData.artist;
+                const artistElement = document.createElement('p');
+                artistElement.textContent = songData.artist;
 
-                    songItem.appendChild(coverImage);
-                    songItem.appendChild(titleElement);
-                    songItem.appendChild(artistElement);
-                    songGrid.appendChild(songItem);
-                }
+                songItem.appendChild(coverImage);
+                songItem.appendChild(titleElement);
+                songItem.appendChild(artistElement);
+                songGrid.appendChild(songItem);
             });
         }
 
@@ -302,9 +300,10 @@
             radioAudio.play();
         }
 
-        // Load artists on page load
-        window.onload = () => {
-            displayArtists();
+        // Load artists and songs on page load
+        window.onload = async () => {
+            await displayArtists();
+            await displaySongs();
         };
 
         // Listen to Radio Paradise
