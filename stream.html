@@ -78,82 +78,6 @@
             background-color: #e0e0e0;
             color: black;
         }
-        .song-item {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            color: white;
-            background-color: #1e1e2f;
-        }
-        .song-item:hover {
-            background-color: #333;
-        }
-        .song-cover {
-            width: 50px; /* Reduced size for song cover */
-            height: 50px;
-            margin-right: 15px;
-            border-radius: 5px;
-        }
-        .song-details {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        audio {
-            width: 100%;
-            margin-top: 10px;
-            border-radius: 5px;
-            background-color: #f3f3f3;
-            border: none;
-            outline: none;
-            height: 45px;
-        }
-        audio::-webkit-media-controls {
-            background-color: #1db954;
-            border-radius: 5px;
-        }
-        audio::-webkit-media-controls-panel {
-            background-color: #1db954;
-        }
-        audio::-webkit-media-controls-play-button,
-        audio::-webkit-media-controls-volume-slider {
-            background-color: #1db954;
-        }
-        .song-actions {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-        .song-actions button {
-            margin-right: 10px;
-            background: none;
-            border: none;
-            color: #1db954;
-            cursor: pointer;
-        }
-        .song-actions button:hover {
-            color: #fff;
-        }
-        .listen-button {
-            background-color: white;
-            color: black;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
-        }
-        .description {
-            margin: 15px 0;
-            color: white;
-        }
-        
-        /* New styles for song grids */
         .song-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -166,14 +90,30 @@
             padding: 10px;
             border-radius: 8px;
             transition: background-color 0.3s;
+            cursor: pointer; /* Make items clickable */
         }
         .song-grid-item:hover {
             background-color: #333;
         }
         .song-grid-cover {
-            width: 100%;
-            height: auto;
+            width: 100px; /* Fixed size for song cover */
+            height: 100px; /* Fixed size for song cover */
+            object-fit: cover; /* Maintain aspect ratio */
             border-radius: 5px;
+        }
+        .description {
+            margin: 15px 0;
+            color: white;
+        }
+        .listen-button {
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -280,11 +220,11 @@
                 const songData = doc.data();
                 if (songData.artist === artist) {
                     const songItem = document.createElement('div');
-                    songItem.className = 'song-item';
+                    songItem.className = 'song-grid-item';
 
                     const coverImage = document.createElement('img');
                     coverImage.src = songData.coverURL;
-                    coverImage.className = 'song-cover';
+                    coverImage.className = 'song-grid-cover';
 
                     const titleElement = document.createElement('h3');
                     titleElement.textContent = songData.title;
@@ -292,46 +232,11 @@
                     const descriptionElement = document.createElement('p');
                     descriptionElement.textContent = songData.description;
 
-                    const playsElement = document.createElement('p');
-                    playsElement.textContent = `Plays: ${songData.plays}`;
-
-                    const heartsElement = document.createElement('p');
-                    heartsElement.textContent = `Hearts: ${songData.hearts}`;
-
-                    const playButton = document.createElement('button');
-                    playButton.textContent = "Play";
-                    playButton.onclick = async () => {
-                        playSong(songData.audioURL);
-
-                        // Increment plays in Firebase
-                        const currentPlays = songData.plays + 1; // Increment in local context
-                        await updateDoc(doc.ref, { plays: currentPlays });
-                        playsElement.textContent = `Plays: ${currentPlays}`;
-                    };
-
-                    const heartButton = document.createElement('button');
-                    heartButton.textContent = "❤️";
-                    heartButton.onclick = async () => {
-                        const currentHearts = songData.hearts + (heartButton.classList.toggle('active') ? 1 : -1);
-                        await updateDoc(doc.ref, { hearts: currentHearts });
-                        heartsElement.textContent = `Hearts: ${currentHearts}`;
-                    };
-
-                    const songDetails = document.createElement('div');
-                    songDetails.className = 'song-details';
-                    songDetails.appendChild(titleElement);
-                    songDetails.appendChild(descriptionElement);
-                    songDetails.appendChild(playsElement);
-                    songDetails.appendChild(heartsElement);
-                    
-                    const songActions = document.createElement('div');
-                    songActions.className = 'song-actions';
-                    songActions.appendChild(playButton);
-                    songActions.appendChild(heartButton);
-
                     songItem.appendChild(coverImage);
-                    songItem.appendChild(songDetails);
-                    songItem.appendChild(songActions);
+                    songItem.appendChild(titleElement);
+                    songItem.appendChild(descriptionElement);
+
+                    songItem.onclick = () => playSong(songData.audioURL); // Play song on click
                     songGrid.appendChild(songItem);
                 }
             });
@@ -359,6 +264,8 @@
                 songItem.appendChild(coverImage);
                 songItem.appendChild(titleElement);
                 songItem.appendChild(artistElement);
+
+                songItem.onclick = () => playSong(songData.audioURL); // Play song on click
                 allSongsGrid.appendChild(songItem);
             });
         }
