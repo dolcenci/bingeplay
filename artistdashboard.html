@@ -52,7 +52,17 @@
             margin-top: 10px;
             color: #ffd700; /* Gold color for earnings */
         }
-        .logout-button {
+        .login-form {
+            margin-bottom: 20px;
+        }
+        .login-form input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .login-button {
             background-color: white;
             color: black;
             border: none;
@@ -60,22 +70,27 @@
             padding: 10px 15px;
             cursor: pointer;
             font-size: 16px;
-            margin-top: 15px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Artist Dashboard</h1>
+        <div class="login-form" id="loginForm">
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <input type="password" id="password" placeholder="Enter your password" required>
+            <button class="login-button" id="loginButton">Login</button>
+        </div>
+
         <h2>Your Songs</h2>
         <div class="song-grid" id="songGrid"></div>
 
-        <button class="logout-button" id="logoutButton">Logout</button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
@@ -89,16 +104,15 @@
 
         const app = initializeApp(firebaseConfig);
         const firestore = getFirestore(app);
+        const auth = getAuth(app);
         const songGrid = document.getElementById('songGrid');
-        const logoutButton = document.getElementById('logoutButton');
+        const loginButton = document.getElementById('loginButton');
+        const loginForm = document.getElementById('loginForm');
 
-        // Assuming user is already logged in and you have the artist's email
-        const artistEmail = "artist@example.com"; // Replace this with actual logged-in artist's email
-
-        async function displaySongs() {
+        async function displaySongs(artistEmail) {
             songGrid.innerHTML = ''; // Clear previous songs
             const querySnapshot = await getDocs(collection(firestore, 'songs'));
-            
+
             querySnapshot.forEach((doc) => {
                 const songData = doc.data();
                 if (songData.artist === artistEmail) { // Filter songs by logged-in artist
@@ -130,15 +144,18 @@
             });
         }
 
-        logoutButton.addEventListener('click', () => {
-            // Logic to log out the user
-            window.location.href = 'login.html'; // Redirect to login page
-        });
+        loginButton.addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-        // Load songs on page load
-        window.onload = async () => {
-            await displaySongs();
-        };
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                loginForm.style.display = 'none'; // Hide login form
+                await displaySongs(email); // Fetch and display songs
+            } catch (error) {
+                alert('Login failed: ' + error.message);
+            }
+        });
     </script>
 </body>
 </html>
