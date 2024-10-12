@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -81,6 +81,11 @@
             <textarea id="description" placeholder="Song Description" rows="3" required></textarea>
             <input type="file" id="audioUpload" accept="audio/*" required>
             <input type="file" id="coverUpload" accept="image/*" required>
+            
+            <!-- New Section for Lyrics -->
+            <textarea id="lyrics" placeholder="Type lyrics here..." rows="5"></textarea>
+            <input type="file" id="lyricsUpload" accept=".txt" placeholder="Upload Lyrics File (txt format)">
+            
             <button class="upload-button" id="uploadButton">Upload Song</button>
             <li><a class="download-linkpurple" href="songplayer.html">Music Player</a></li>
             <li><a class="download-linkpurple" href="index.html">Index</a></li>
@@ -122,12 +127,15 @@
         const description = document.getElementById('description');
         const audioUpload = document.getElementById('audioUpload');
         const coverUpload = document.getElementById('coverUpload');
+        const lyrics = document.getElementById('lyrics');
+        const lyricsUpload = document.getElementById('lyricsUpload');
         const songList = document.getElementById('songList');
         const errorMessage = document.getElementById('errorMessage');
 
         uploadButton.addEventListener('click', async () => {
             const audioFile = audioUpload.files[0];
             const coverFile = coverUpload.files[0];
+            const lyricsFile = lyricsUpload.files[0];
 
             if (!email.value || !password.value) {
                 errorMessage.textContent = 'Please enter your email and password.';
@@ -153,6 +161,14 @@
                     const audioURL = await getDownloadURL(audioRef);
                     const coverURL = await getDownloadURL(coverRef);
 
+                    // Handle lyrics
+                    let lyricsContent = lyrics.value;
+                    if (lyricsFile) {
+                        const lyricsRef = ref(storage, 'lyrics/' + lyricsFile.name);
+                        await uploadBytes(lyricsRef, lyricsFile);
+                        lyricsContent = await getDownloadURL(lyricsRef); // Get URL for the uploaded file
+                    }
+
                     // Save song details to Firestore with user ID
                     await addDoc(collection(firestore, 'songs'), {
                         title: songTitle.value,
@@ -160,6 +176,7 @@
                         description: description.value,
                         audioURL: audioURL,
                         coverURL: coverURL,
+                        lyrics: lyricsContent,
                         userId: userId, // Store user ID with song details
                         createdAt: new Date(),
                         plays: 0,
@@ -173,6 +190,8 @@
                     description.value = '';
                     audioUpload.value = '';
                     coverUpload.value = '';
+                    lyrics.value = '';
+                    lyricsUpload.value = '';
                     email.value = '';
                     password.value = '';
                     displaySongs(); // Refresh song list
@@ -204,7 +223,7 @@
                 artistElement.textContent = `Artist: ${songData.artist}`;
 
                 const descriptionElement = document.createElement('p');
-                descriptionElement.textContent = songData.description;
+                descriptionElement.textContent = `Description: ${songData.description}`;
 
                 const playsElement = document.createElement('p');
                 playsElement.textContent = `Plays: ${songData.plays}`;
