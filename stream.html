@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -87,19 +87,31 @@
         .song-grid-item {
             text-align: center;
             background-color: #1e1e2f;
-            padding: 10px;
             border-radius: 8px;
             transition: background-color 0.3s;
             cursor: pointer; /* Make items clickable */
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Align items */
         }
         .song-grid-item:hover {
             background-color: #333;
         }
         .song-grid-cover {
-            width: 100px; /* Fixed size for song cover */
-            height: 100px; /* Fixed size for song cover */
-            object-fit: cover; /* Maintain aspect ratio */
-            border-radius: 5px;
+            width: 100%; /* Cover the width */
+            height: 0; /* Remove height */
+            padding-bottom: 100%; /* Maintain aspect ratio (1:1) */
+            background-size: cover; /* Cover the space */
+            background-position: center; /* Center the image */
+        }
+        .song-title {
+            font-size: 1em;
+            margin: 5px 0;
+        }
+        .song-artist {
+            font-size: 0.9em;
+            margin: 5px 0;
         }
         .description {
             margin: 15px 0;
@@ -114,6 +126,26 @@
             cursor: pointer;
             font-size: 16px;
             margin-top: 15px;
+        }
+        audio {
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 5px;
+            background-color: #f3f3f3;
+            border: none;
+            outline: none;
+            height: 45px;
+        }
+        audio::-webkit-media-controls {
+            background-color: #1db954;
+            border-radius: 5px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #1db954;
+        }
+        audio::-webkit-media-controls-play-button,
+        audio::-webkit-media-controls-volume-slider {
+            background-color: #1db954;
         }
     </style>
 </head>
@@ -228,13 +260,15 @@
 
                     const titleElement = document.createElement('h3');
                     titleElement.textContent = songData.title;
+                    titleElement.className = 'song-title';
 
-                    const descriptionElement = document.createElement('p');
-                    descriptionElement.textContent = songData.description;
+                    const artistElement = document.createElement('p');
+                    artistElement.textContent = songData.artist;
+                    artistElement.className = 'song-artist';
 
-                    songItem.appendChild(coverImage);
                     songItem.appendChild(titleElement);
-                    songItem.appendChild(descriptionElement);
+                    songItem.appendChild(artistElement);
+                    songItem.appendChild(coverImage);
 
                     songItem.onclick = () => playSong(songData.audioURL); // Play song on click
                     songGrid.appendChild(songItem);
@@ -257,13 +291,15 @@
 
                 const titleElement = document.createElement('h3');
                 titleElement.textContent = songData.title;
+                titleElement.className = 'song-title';
 
                 const artistElement = document.createElement('p');
                 artistElement.textContent = songData.artist;
+                artistElement.className = 'song-artist';
 
-                songItem.appendChild(coverImage);
                 songItem.appendChild(titleElement);
                 songItem.appendChild(artistElement);
+                songItem.appendChild(coverImage);
 
                 songItem.onclick = () => playSong(songData.audioURL); // Play song on click
                 allSongsGrid.appendChild(songItem);
