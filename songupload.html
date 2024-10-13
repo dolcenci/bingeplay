@@ -1,108 +1,181 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Songs</title>
+    <title>Login & Registration</title>
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             min-height: 100vh;
             margin: 0;
             background-color: #f3f7f9;
             font-family: Arial, sans-serif;
         }
         .container {
-            width: 80%;
+            display: flex;
             max-width: 800px;
-            background-color: #ffffff;
-            padding: 20px;
+            width: 100%;
+            margin: 20px;
             border-radius: 8px;
+            overflow: hidden;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
+        .image-container {
+            flex: 1;
+            background-size: cover;
+        }
+        .form-container {
+            flex: 1;
+            background-color: #ffffff;
+            padding: 40px;
+            box-sizing: border-box;
+        }
         h1 {
+            color: #333333;
+            font-size: 24px;
+            margin-bottom: 30px;
             text-align: center;
-            color: #333;
         }
         .form-group {
             margin-bottom: 20px;
         }
-        input[type="file"],
-        input[type="text"],
-        textarea {
+        label {
             display: block;
-            margin: 10px 0;
-            width: 100%;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555555;
         }
-        .upload-button {
+        input[type="email"],
+        input[type="password"],
+        input[type="text"],
+        input[type="date"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #cccccc;
+            font-size: 16px;
+        }
+        .form-button {
             background-color: #007bff;
             color: #ffffff;
             border: none;
             border-radius: 5px;
-            padding: 10px 15px;
+            padding: 12px;
+            font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-        .upload-button:hover {
+        .form-button:hover {
             background-color: #0056b3;
         }
-        .song-list {
+        .form-step {
+            display: none;
+        }
+        .form-toggle {
+            text-align: center;
             margin-top: 20px;
+            font-size: 14px;
         }
-        .download-linkpurple {
-            display: block;
-            padding: 10px 15px;
-            background-color: #9b59b6;
-            color: white;
-            text-decoration: none;
-            text-align: center;
+        .google-button {
+            background-color: #db4437;
+            color: #ffffff;
+            border: none;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            padding: 12px;
+            font-size: 16px;
             cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
         }
-        .error-message {
-            color: red;
-            text-align: center;
+        .google-button:hover {
+            background-color: #c1351d;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Upload Songs</h1>
-        <div class="error-message" id="errorMessage" style="display: none;"></div>
-        <div class="form-group">
-            <input type="text" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <input type="text" id="songTitle" placeholder="Song Title" required>
-            <input type="text" id="artistName" placeholder="Artist Name" required>
-            <textarea id="description" placeholder="Song Description" rows="3" required></textarea>
-            <input type="file" id="audioUpload" accept="audio/*" required>
-            <input type="file" id="coverUpload" accept="image/*" required>
+        <div id="imageStep" class="image-container"></div>
+        <div class="form-container">
+            <h1 id="formTitle">Login</h1>
             
-            <!-- New Section for Lyrics -->
-            <textarea id="lyrics" placeholder="Type lyrics here..." rows="5"></textarea>
-            <input type="file" id="lyricsUpload" accept=".txt" placeholder="Upload Lyrics File (txt format)">
-            
-            <button class="upload-button" id="uploadButton">Upload Song</button>
-            <li><a class="download-linkpurple" href="songplayer.html">Music Player</a></li>
-            <li><a class="download-linkpurple" href="index.html">Index</a></li>
-        </div>
+            <!-- Sign In Form -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="form-button">Login</button>
+                <button type="button" class="google-button" id="googleSignIn">Sign in with Google</button>
+            </form>
 
-        <div class="song-list" id="songList">
-            <h2>Uploaded Songs</h2>
-            <!-- Uploaded songs will be displayed here -->
+            <!-- Registration Form -->
+            <form id="registerForm" style="display: none;">
+                <!-- Step 1: Email, Password, Name -->
+                <div id="step1" class="form-step" style="display: block;">
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" placeholder="Enter your password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" placeholder="Enter your name" required>
+                    </div>
+                    <button type="button" class="form-button" id="nextToStep2">Next</button>
+                </div>
+
+                <!-- Step 2: Address, Date of Birth -->
+                <div id="step2" class="form-step">
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" placeholder="Enter your address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" required>
+                    </div>
+                    <button type="button" class="form-button" id="nextToStep3">Next</button>
+                </div>
+
+                <!-- Step 3: Bio, Photo -->
+                <div id="step3" class="form-step">
+                    <div class="form-group">
+                        <label for="bio">Bio</label>
+                        <textarea id="bio" rows="4" placeholder="Tell us about yourself" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="photo">Photo</label>
+                        <input type="file" id="photo" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="form-button">Register</button>
+                    <button type="button" class="google-button" id="googleSignUp">Sign up with Google</button>
+                </div>
+            </form>
+
+            <div class="form-toggle">
+                <p id="toggleText">Don't have an account? <a href="#" id="toggleForm">Register</a></p>
+            </div>
         </div>
     </div>
 
     <!-- Import Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-storage.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
@@ -115,148 +188,147 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const storage = getStorage(app);
-        const firestore = getFirestore(app);
         const auth = getAuth(app);
+        const firestore = getFirestore(app);
+        const storage = getStorage(app);
+        const provider = new GoogleAuthProvider();
 
-        const uploadButton = document.getElementById('uploadButton');
-        const email = document.getElementById('email');
-        const password = document.getElementById('password');
-        const songTitle = document.getElementById('songTitle');
-        const artistName = document.getElementById('artistName');
-        const description = document.getElementById('description');
-        const audioUpload = document.getElementById('audioUpload');
-        const coverUpload = document.getElementById('coverUpload');
-        const lyrics = document.getElementById('lyrics');
-        const lyricsUpload = document.getElementById('lyricsUpload');
-        const songList = document.getElementById('songList');
-        const errorMessage = document.getElementById('errorMessage');
+        // Set images for each step
+        const imageStep = document.getElementById('imageStep');
+        const images = [
+            'assets/img/analytics-3088958_640.jpg', // Step 1
+            'assets/img/lawyer-28838_640.png', // Step 2
+            'assets/img/case-law-677940_640.jpg'  // Step 3
+        ];
 
-        uploadButton.addEventListener('click', async () => {
-            const audioFile = audioUpload.files[0];
-            const coverFile = coverUpload.files[0];
-            const lyricsFile = lyricsUpload.files[0];
+        // Google Sign In
+        document.getElementById('googleSignIn').addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    window.location.href = 'index.html';
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        });
 
-            if (!email.value || !password.value) {
-                errorMessage.textContent = 'Please enter your email and password.';
-                errorMessage.style.display = 'block';
-                return;
-            }
+        // Google Sign Up
+        document.getElementById('googleSignUp').addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .then(async (result) => {
+                    const user = result.user;
+                    await setDoc(doc(firestore, 'users', user.uid), {
+                        name: user.displayName,
+                        email: user.email,
+                        photoURL: user.photoURL
+                    });
+                    window.location.href = 'index.html';
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        });
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Save to local storage
+            localStorage.setItem('email', email);
+            localStorage.setItem('password', password);
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    window.location.href = 'index.html';
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        });
+
+        // Registration functionality
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const dob = document.getElementById('dob').value;
+            const bio = document.getElementById('bio').value;
+            const photoFile = document.getElementById('photo').files[0];
 
             try {
-                // Sign in the user
-                const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
-                const userId = userCredential.user.uid; // Get user ID
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
 
-                if (audioFile && coverFile) {
-                    const audioRef = ref(storage, 'songs/' + audioFile.name);
-                    const coverRef = ref(storage, 'covers/' + coverFile.name);
+                // Upload photo to Firebase Storage
+                const photoRef = ref(storage, 'users/' + user.uid + '/profile.jpg');
+                await uploadBytes(photoRef, photoFile);
+                const photoURL = await getDownloadURL(photoRef);
 
-                    // Upload audio and cover files
-                    await Promise.all([
-                        uploadBytes(audioRef, audioFile),
-                        uploadBytes(coverRef, coverFile)
-                    ]);
+                // Save user information in Firestore
+                await setDoc(doc(firestore, 'users', user.uid), {
+                    name,
+                    email,
+                    address,
+                    dob,
+                    bio,
+                    photoURL
+                });
 
-                    const audioURL = await getDownloadURL(audioRef);
-                    const coverURL = await getDownloadURL(coverRef);
+                // Save to local storage
+                localStorage.setItem('email', email);
+                localStorage.setItem('password', password);
 
-                    // Handle lyrics
-                    let lyricsContent = lyrics.value;
-                    if (lyricsFile) {
-                        const lyricsRef = ref(storage, 'lyrics/' + lyricsFile.name);
-                        await uploadBytes(lyricsRef, lyricsFile);
-                        lyricsContent = await getDownloadURL(lyricsRef); // Get URL for the uploaded file
-                    }
-
-                    // Save song details to Firestore with user ID
-                    await addDoc(collection(firestore, 'songs'), {
-                        title: songTitle.value,
-                        artist: artistName.value,
-                        description: description.value,
-                        audioURL: audioURL,
-                        coverURL: coverURL,
-                        lyrics: lyricsContent,
-                        userId: userId, // Store user ID with song details
-                        createdAt: new Date(),
-                        plays: 0,
-                        hearts: 0,
-                        isHearted: false
-                    });
-
-                    // Reset input fields
-                    songTitle.value = '';
-                    artistName.value = '';
-                    description.value = '';
-                    audioUpload.value = '';
-                    coverUpload.value = '';
-                    lyrics.value = '';
-                    lyricsUpload.value = '';
-                    email.value = '';
-                    password.value = '';
-                    displaySongs(); // Refresh song list
-                } else {
-                    alert('Please select both an audio file and a cover image to upload.');
-                }
+                window.location.href = 'profile.html';
             } catch (error) {
-                errorMessage.textContent = error.message;
-                errorMessage.style.display = 'block';
+                alert(error.message);
             }
         });
 
-        async function displaySongs() {
-            songList.innerHTML = '<h2>Uploaded Songs</h2>'; // Clear existing songs
-            const querySnapshot = await getDocs(collection(firestore, 'songs'));
-            querySnapshot.forEach((doc) => {
-                const songData = doc.data();
-                const songItem = document.createElement('div');
-                songItem.className = 'song-item';
+        // Toggle between Login and Register forms
+        document.getElementById('toggleForm').addEventListener('click', (e) => {
+            e.preventDefault();
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const formTitle = document.getElementById('formTitle');
+            const toggleText = document.getElementById('toggleText');
 
-                const coverImage = document.createElement('img');
-                coverImage.src = songData.coverURL;
-                coverImage.className = 'song-cover';
+            if (loginForm.style.display === "none") {
+                loginForm.style.display = "block";
+                registerForm.style.display = "none";
+                formTitle.textContent = "Login";
+                toggleText.innerHTML = "Don't have an account? <a href='#' id='toggleForm'>Register</a>";
+            } else {
+                loginForm.style.display = "none";
+                registerForm.style.display = "block";
+                formTitle.textContent = "Register";
+                toggleText.innerHTML = "Already have an account? <a href='#' id='toggleForm'>Login</a>";
+            }
+        });
 
-                const titleElement = document.createElement('h3');
-                titleElement.textContent = songData.title;
-
-                const artistElement = document.createElement('p');
-                artistElement.textContent = `Artist: ${songData.artist}`;
-
-                const descriptionElement = document.createElement('p');
-                descriptionElement.textContent = `Description: ${songData.description}`;
-
-                const playsElement = document.createElement('p');
-                playsElement.textContent = `Plays: ${songData.plays}`;
-
-                const heartsElement = document.createElement('p');
-                heartsElement.textContent = `Hearts: ${songData.hearts}`;
-
-                const heartButton = document.createElement('button');
-                heartButton.textContent = songData.isHearted ? '❤️' : '🤍';
-                heartButton.onclick = async () => {
-                    songData.isHearted = !songData.isHearted;
-                    songData.hearts += songData.isHearted ? 1 : -1;
-
-                    // Update song document in Firestore
-                    await updateDoc(doc.ref, { hearts: songData.hearts, isHearted: songData.isHearted });
-                    heartsElement.textContent = `Hearts: ${songData.hearts}`;
-                    heartButton.textContent = songData.isHearted ? '❤️' : '🤍';
-                };
-
-                songItem.appendChild(coverImage);
-                songItem.appendChild(titleElement);
-                songItem.appendChild(artistElement);
-                songItem.appendChild(descriptionElement);
-                songItem.appendChild(playsElement);
-                songItem.appendChild(heartsElement);
-                songItem.appendChild(heartButton);
-
-                songList.appendChild(songItem);
-            });
+        // Update image in the image container based on the current step
+        function updateImage(step) {
+            imageStep.style.backgroundImage = `url('${images[step]}')`;
         }
 
-        // Load existing songs on page load
-        window.onload = displaySongs;
+        // Navigation between registration steps
+        document.getElementById('nextToStep2').addEventListener('click', () => {
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+            updateImage(1);
+        });
+
+        document.getElementById('nextToStep3').addEventListener('click', () => {
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step3').style.display = 'block';
+            updateImage(2);
+        });
+
+        // Initialize with the first image
+        updateImage(0);
     </script>
 </body>
 </html>
