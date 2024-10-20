@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,28 +18,35 @@
         h1 {
             margin-bottom: 20px;
         }
-        .music-list, .search-bar, .top-artists, .top-albums {
+        .music-list, .top-artists, .top-albums {
             width: 100%;
             max-width: 600px;
             margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 columns */
+            gap: 10px; /* Gap between items */
         }
         .music-item, .artist-item, .album-item {
             background-color: #444;
             padding: 10px;
-            margin: 5px;
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s;
-            display: inline-block; /* Make items inline */
-            width: calc(50% - 10px); /* Two items per row with margin */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .music-item:hover, .artist-item:hover, .album-item:hover {
             background-color: #555;
         }
         iframe {
             width: 100%;
-            height: 400px;
+            height: 100px; /* Adjust height for better visibility */
             border: none;
+        }
+        .artist-image {
+            width: 100%;
+            border-radius: 5px;
         }
         .search-bar input {
             width: 100%;
@@ -47,15 +54,6 @@
             border: none;
             border-radius: 5px;
             margin-bottom: 10px;
-        }
-        .top-artists, .top-albums {
-            display: flex;
-            flex-wrap: wrap; /* Enable wrapping of items */
-        }
-        .artist-item img {
-            width: 100%; /* Ensure the image takes full width */
-            height: auto; /* Maintain aspect ratio */
-            border-radius: 5px;
         }
     </style>
 </head>
@@ -85,7 +83,7 @@
         const topAlbums = document.getElementById('topAlbums');
 
         async function fetchTopMusic() {
-            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&type=video&order=viewCount&videoCategoryId=10&key=${API_KEY}`);
+            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=video&order=viewCount&videoCategoryId=10&key=${API_KEY}`);
             const data = await response.json();
             displayMusic(data.items);
         }
@@ -95,8 +93,9 @@
             musicItems.forEach(item => {
                 const musicItem = document.createElement('div');
                 musicItem.className = 'music-item';
-                musicItem.textContent = item.snippet.title;
-                musicItem.onclick = () => playMusic(item.id.videoId);
+                const videoFrame = document.createElement('iframe');
+                videoFrame.src = `https://www.youtube.com/embed/${item.id.videoId}?enablejsapi=1`;
+                musicItem.appendChild(videoFrame);
                 musicList.appendChild(musicItem);
             });
         }
@@ -121,7 +120,7 @@
         });
 
         async function fetchTopArtists() {
-            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&type=channel&q=music&key=${API_KEY}`);
+            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=channel&q=music&key=${API_KEY}`);
             const data = await response.json();
             displayTopArtists(data.items);
         }
@@ -131,13 +130,11 @@
             artists.forEach(artist => {
                 const artistItem = document.createElement('div');
                 artistItem.className = 'artist-item';
-                artistItem.textContent = artist.snippet.title;
-                artistItem.onclick = () => playArtistMusic(artist.id.channelId);
-                
                 const artistImage = document.createElement('img');
-                artistImage.src = artist.snippet.thumbnails.default.url; // Artist image
+                artistImage.src = artist.snippet.thumbnails.default.url; // Use artist image thumbnail
+                artistImage.className = 'artist-image';
                 artistItem.appendChild(artistImage);
-                
+                artistItem.onclick = () => playArtistMusic(artist.id.channelId);
                 topArtists.appendChild(artistItem);
             });
         }
@@ -149,7 +146,7 @@
         }
 
         async function fetchTopAlbums() {
-            const response = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&maxResults=5&channelId=YOUR_CHANNEL_ID&key=${API_KEY}`); // Replace with a valid channel ID
+            const response = await fetch(`https://www.googleapis.com/youtube/v3/playlists?part=snippet&maxResults=12&channelId=YOUR_CHANNEL_ID&key=${API_KEY}`); // Replace with a valid channel ID
             const data = await response.json();
             displayTopAlbums(data.items);
         }
@@ -159,14 +156,11 @@
             albums.forEach(album => {
                 const albumItem = document.createElement('div');
                 albumItem.className = 'album-item';
-                albumItem.textContent = album.snippet.title;
+                const albumImage = document.createElement('img');
+                albumImage.src = album.snippet.thumbnails.default.url; // Use album image thumbnail
+                albumImage.className = 'artist-image'; // Use same class for styling
+                albumItem.appendChild(albumImage);
                 albumItem.onclick = () => playAlbumMusic(album.id);
-                
-                const video = document.createElement('iframe');
-                video.src = `https://www.youtube.com/embed/videoseries?list=${album.id}`; // Embed the album playlist
-                video.allowFullscreen = true;
-                albumItem.appendChild(video);
-                
                 topAlbums.appendChild(albumItem);
             });
         }
