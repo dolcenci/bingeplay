@@ -1,5 +1,4 @@
- 
-<!DOCTYPE html>
+<!DOCTYPE html>  
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,7 +14,6 @@
             background-color: #111727;
             font-family: Arial, sans-serif;
             color: white;
-            flex-direction: column; /* Allow the sidebar and container to stack vertically */
         }
         .sidebar {
             width: 25%;
@@ -32,7 +30,6 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            flex-grow: 1; /* Allow the container to grow and push the audio player down */
         }
         h1, h2, h3 {
             color: white;
@@ -125,19 +122,6 @@
             border-radius: 5px;
             white-space: pre-wrap; /* Preserve whitespace for lyrics formatting */
         }
-        .radio-player {
-            background-color: darkgreen; /* Dark green color for audio player */
-            padding: 15px;
-            position: sticky;
-            bottom: 0;
-            width: calc(100% - 25%); /* Full width minus sidebar */
-            margin-left: 25%; /* Align with the container */
-            border-radius: 0; /* Rectangular shape */
-        }
-        audio {
-            width: 100%; /* Full width for audio controls */
-            border-radius: 0; /* Rectangular shape */
-        }
     </style>
 </head>
 <body>
@@ -198,10 +182,10 @@
     <!-- Import Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQFmC8",
+            apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
             authDomain: "binge-play.firebaseapp.com",
             databaseURL: "https://binge-play-default-rtdb.firebaseio.com",
             projectId: "binge-play",
@@ -364,4 +348,6 @@
     </script>
 </body>
 </html>
+
+
 
