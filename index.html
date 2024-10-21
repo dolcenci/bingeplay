@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+  <!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -125,7 +125,7 @@
         }
         .theme-toggle {
             margin-top: 20px;
-            padding: 10px;
+            padding: 20px;
             background-color: #1e1e2f; /* Sidebar button color */
             color: white;
             border: none;
@@ -136,34 +136,25 @@
             font-size: 18px;
         }
         .toggle {
-            display: inline-block;
-            width: 60px;
-            height: 30px;
-            background-color: #ccc; /* Default toggle color */
-            border-radius: 15px;
+            width: 100%;
+            height: 60px;
+            background-color: #4caf50; /* Light mode item color */
+            border: none;
+            border-radius: 30px;
             position: relative;
             cursor: pointer;
+            font-size: 20px;
+            color: white;
             transition: background-color 0.3s;
-        }
-        .toggle::after {
-            content: '';
-            position: absolute;
-            width: 26px;
-            height: 26px;
-            background-color: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s;
         }
         /* Light Mode Styles */
         .light-mode {
             background-color: #f0f0f0; /* Light mode background */
-            color: darkblue; /* Light mode text color */
+            color: black;
         }
         .light-mode .sidebar {
             background-color: #ffffff; /* Light mode sidebar */
-            color: darkblue;
+            color: black;
         }
         .light-mode .container {
             background-color: #f9f9f9; /* Light mode container */
@@ -171,20 +162,17 @@
         .light-mode .nav {
             background-color: #e0e0e0;
         }
-        .light-mode .artist-list {
-            background-color: green; /* Light mode artist section */
-        }
         .light-mode .artist-item, .light-mode .radio-station-item {
             border-color: #aaa;
-            color: darkblue; /* Light mode item text color */
+            color: black;
         }
         .light-mode .artist-item:hover, .light-mode .radio-station-item:hover {
             background-color: #d0d0d0;
-            color: darkblue;
+            color: black;
         }
         .light-mode .song-grid-item {
             background-color: #4caf50; /* Light mode song item */
-            color: darkblue;
+            color: black;
         }
         .light-mode .song-grid-item:hover {
             background-color: #5cb85c; /* Darker green on hover */
@@ -200,9 +188,9 @@
         <a href="#">TOP ARTISTS</a>
         <a href="globalcharts2.html">globalcharts 2</a>
         <a href="#">Internet Radio</a>
-        <div class="theme-toggle" id="themeToggle">
-            <div class="toggle" id="toggleButton"></div>
-        </div>
+        <button class="theme-toggle" id="themeToggle">
+            <div class="toggle" id="toggleButton">Toggle Light/Dark Mode</div>
+        </button>
     </div>
     <div class="container">
         <div class="nav">
@@ -244,14 +232,19 @@
         <h2>Top Songs</h2>
         <div class="song-grid" id="topSongsGrid"></div> <!-- New section for top songs -->
 
-        <div class="radio-player">
-            <button class="listen-button" id="listenButton">Listen to Radio Paradise</button>
-            <audio id="radioAudio" controls style="display:none;">
-                <source id="radioSource" src="" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-            <div class="lyrics" id="lyricsDisplay"></div>
+        <h2>RADIO</h2>
+        <h2>Top Internet Radio Stations</h2>
+        <div class="radio-station-list" id="radioStationList"></div>
+        
+        <div class="description">
+            Don't know what to play? Why not try the number one internet radio station, Radio Paradise, and let it do the playing for you.
         </div>
+        <button class="listen-button" id="listenButton">Listen to Radio Paradise</button>
+        <audio id="radioAudio" controls style="display:none;">
+            <source id="radioSource" src="" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <div class="lyrics" id="lyricsDisplay"></div>
     </div>
 
     <script type="module">
@@ -279,7 +272,7 @@
         const radioSource = document.getElementById('radioSource');
         const listenButton = document.getElementById('listenButton');
         const lyricsDisplay = document.getElementById('lyricsDisplay');
-        const toggleButton = document.getElementById('toggleButton');
+        const themeToggle = document.getElementById('themeToggle');
 
         let isLightMode = false;
 
@@ -424,10 +417,10 @@
         });
 
         // Theme toggler functionality
-        toggleButton.addEventListener('click', () => {
+        themeToggle.addEventListener('click', () => {
             isLightMode = !isLightMode;
             document.body.classList.toggle('light-mode', isLightMode);
-            toggleButton.style.transform = isLightMode ? 'translateX(30px)' : 'translateX(0)'; // Move the toggle
+            themeToggle.textContent = isLightMode ? 'Switch to Dark Mode' : 'Switch to Light Mode';
         });
     </script>
 </body>
