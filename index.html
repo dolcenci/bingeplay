@@ -1,6 +1,4 @@
- 
-
-<!DOCTYPE html> 
+ <!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,14 +11,15 @@
             align-items: flex-start;
             min-height: 100vh;
             margin: 0;
-            background-color: #111727;
+            background-color: #111727; /* Dark mode background */
             font-family: Arial, sans-serif;
             color: white;
+            transition: background-color 0.3s, color 0.3s;
         }
         .sidebar {
             width: 25%;
             height: 80%;
-            background-color: #111727;
+            background-color: #111727; /* Dark mode sidebar */
             color: #fff;
             padding: 20px;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
@@ -28,7 +27,7 @@
         .container {
             width: 75%;
             max-width: 800px;
-            background-color: #111727;
+            background-color: #111727; /* Dark mode container */
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -124,6 +123,47 @@
             border-radius: 5px;
             white-space: pre-wrap; /* Preserve whitespace for lyrics formatting */
         }
+        .theme-toggle {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #1e1e2f; /* Sidebar button color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+        /* Light Mode Styles */
+        .light-mode {
+            background-color: #f0f0f0; /* Light mode background */
+            color: black;
+        }
+        .light-mode .sidebar {
+            background-color: #ffffff; /* Light mode sidebar */
+            color: black;
+        }
+        .light-mode .container {
+            background-color: #f9f9f9; /* Light mode container */
+        }
+        .light-mode .nav {
+            background-color: #e0e0e0;
+        }
+        .light-mode .artist-item, .light-mode .radio-station-item {
+            border-color: #aaa;
+            color: black;
+        }
+        .light-mode .artist-item:hover, .light-mode .radio-station-item:hover {
+            background-color: #d0d0d0;
+            color: black;
+        }
+        .light-mode .song-grid-item {
+            background-color: #ffffff; /* Light mode song item */
+            color: black;
+        }
+        .light-mode .song-grid-item:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
@@ -131,35 +171,34 @@
         <h2>Sidebar</h2>
         <p>Navigation or other content can go here.</p>
         <a href="#">Home</a>
-        <a href="globalchaR.html">TOP SONgS</a>
+        <a href="globalchaR.html">TOP SONGS</a>
         <a href="#">TOP ARTISTS</a>
         <a href="globalcharts2.html">globalcharts 2</a>
         <a href="#">Internet Radio</a>
+        <button class="theme-toggle" id="themeToggle">Switch to Light Mode</button>
     </div>
     <div class="container">
         <div class="nav">
             <div>
-                 <a href="#">Home</a>
+                <a href="#">Home</a>
                 <a href="podcast2.html">Podcasts</a>
                 <a href="#">Internet Radio</a>
                 <a href="globalcharts2.html">globalcharts 2</a>
-                 <a href="globalcharts.html">globalcharts</a>
+                <a href="globalcharts.html">globalcharts</a>
                 <a href="globacharts3.html">globalcharts 3</a>
-                
-                <a href="profile.html">profile</a>
+                <a href="profile.html">Profile</a>
                 <a href="signup.html">Sign up</a>
-                <a href="songupload.html">song upload</a>
-                <a href="stream.html">stream</a>
-                <a href="streamb.html">stream b2</a>
-                <a href="streamc.html">stream c</a>
-                <a href="streamd.html">stream d</a>
-               
-                 <a href="artistdashboard.html">artistdashboard </a>
-                <a href="artistdashboard2.html">artistdashboard 2</a>
-                <a href="artistdashboard3.html">artistdashboard 3</a>
-                <a href="songupload2.html">songupload2 </a>
-                <a href="songupload3.html">songupload3 </a>
-                <a href="p.html">Premium payfast</a>
+                <a href="songupload.html">Song upload</a>
+                <a href="stream.html">Stream</a>
+                <a href="streamb.html">Stream b2</a>
+                <a href="streamc.html">Stream c</a>
+                <a href="streamd.html">Stream d</a>
+                <a href="artistdashboard.html">Artist Dashboard</a>
+                <a href="artistdashboard2.html">Artist Dashboard 2</a>
+                <a href="artistdashboard3.html">Artist Dashboard 3</a>
+                <a href="songupload2.html">Song Upload 2</a>
+                <a href="songupload3.html">Song Upload 3</a>
+                <a href="p.html">Premium Payfast</a>
             </div>
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search artists or songs..." />
@@ -205,7 +244,7 @@
         import { getFirestore, collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
+            apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYmC8",
             authDomain: "binge-play.firebaseapp.com",
             databaseURL: "https://binge-play-default-rtdb.firebaseio.com",
             projectId: "binge-play",
@@ -220,11 +259,14 @@
         const artistList = document.getElementById('artistList');
         const songGrid = document.getElementById('songGrid');
         const allSongsGrid = document.getElementById('allSongsGrid');
-        const topSongsGrid = document.getElementById('topSongsGrid'); // New grid for top songs
+        const topSongsGrid = document.getElementById('topSongsGrid');
         const radioAudio = document.getElementById('radioAudio');
         const radioSource = document.getElementById('radioSource');
         const listenButton = document.getElementById('listenButton');
         const lyricsDisplay = document.getElementById('lyricsDisplay');
+        const themeToggle = document.getElementById('themeToggle');
+
+        let isLightMode = false;
 
         const songsData = []; // Store songs data for searching
 
@@ -364,6 +406,13 @@
             radioSource.src = radioParadiseUrl;
             radioAudio.load();
             radioAudio.play();
+        });
+
+        // Theme toggler functionality
+        themeToggle.addEventListener('click', () => {
+            isLightMode = !isLightMode;
+            document.body.classList.toggle('light-mode', isLightMode);
+            themeToggle.textContent = isLightMode ? 'Switch to Dark Mode' : 'Switch to Light Mode';
         });
     </script>
 </body>
