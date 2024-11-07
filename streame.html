@@ -67,7 +67,7 @@ h1, h2, h3 {
     border-radius: 5px;
 }
 
-  .banner {
+   .banner {
             height: 400px; /* Set the banner height */
             display: flex;
             align-items: center;
@@ -78,20 +78,50 @@ h1, h2, h3 {
             position: relative;
         }
 
-        /* Image styling: positioned to take up 35% of the banner */
-        .banner-image {
-            width: 35%;
+        /* Image container for the 3 images */
+        .image-container {
+            width: 40%; /* Combined width of 3 images */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             height: 100%;
-            background-image: url('analytics-3088958_640.jpg'); /* Image source */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border-radius: 8px;
-            opacity: 0.6; /* Slight opacity to blend the image */
+            position: absolute;
+            left: 0; /* Position the container on the left side */
         }
 
-        /* Overlay to give a slight opacity to the image */
-        .banner .banner-text {
+        /* Square image */
+        .square-image {
+            width: 100%;
+            height: 100px;
+            background-image: url('analytics-3088958_640.jpg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+        }
+
+        /* Diamond-shaped image */
+        .diamond-image {
+            width: 100%;
+            height: 100px;
+            background-image: url('gold-163519_640.jpg');
+            background-size: cover;
+            background-position: center;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            border-radius: 8px;
+        }
+
+        /* Circle-shaped image */
+        .circle-image {
+            width: 100px;
+            height: 100px;
+            background-image: url('lawyer-28838_640.png');
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            margin-top: 10px;
+        }
+
+        .banner-text {
             flex: 1;
             color: white;
             font-size: 24px;
@@ -100,7 +130,7 @@ h1, h2, h3 {
             z-index: 1;
         }
 
-        .banner .banner-button {
+        .banner-button {
             background-color: white;
             color: black;
             border: none;
@@ -210,7 +240,11 @@ h1, h2, h3 {
 
         <!-- Banner Section -->
         <div class="banner">
-            <div class="banner-image"></div>
+            <div class="image-container">
+                <div class="square-image"></div>
+                <div class="diamond-image"></div>
+                <div class="circle-image"></div>
+            </div>
             <div class="banner-text">
                 Discover New Music, Artists, and More!
             </div>
