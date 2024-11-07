@@ -67,89 +67,82 @@ h1, h2, h3 {
     border-radius: 5px;
 }
 
- .banner {
+  .banner {
             height: 400px; /* Set the banner height */
             display: flex;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
             background-color: #FF6600; /* Solid orange background for the majority */
             padding: 20px;
             border-radius: 8px;
             position: relative;
+            overflow: hidden; /* Prevent the images from overflowing the banner */
         }
 
-        /* Image container for the 3 images */
+        /* Image container for the two circular images */
         .image-container {
-            width: 60%; /* Increased width to 60% */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            height: 100%;
-            position: absolute;
-            left: 0; /* Position the container on the left side */
-            z-index: 0;
+            z-index: 0; /* Images will be behind the text and button */
         }
 
-        /* Style for individual images */
-        .image {
+        /* Circular image styles */
+        .circle-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
             background-size: cover;
             background-position: center;
-            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease;
         }
 
-        .image:hover {
-            transform: scale(1.05);
-        }
-
-        /* Square image */
-        .square-image {
-            width: 45%; /* Width of 45% of container */
-            height: 120px; /* Consistent height for all images */
+        /* First circular image (top-left) */
+        .circle-image-1 {
             background-image: url('analytics-3088958_640.jpg');
+            position: absolute;
+            top: 10px;
+            left: 10px;
         }
 
-        /* Diamond-shaped image */
-        .diamond-image {
-            width: 45%; /* Width of 45% of container */
-            height: 120px;
+        /* Second circular image (bottom-right) */
+        .circle-image-2 {
             background-image: url('gold-163519_640.jpg');
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
         }
 
-        /* Circle-shaped image */
-        .circle-image {
-            width: 120px; /* Fixed size for the circle */
-            height: 120px;
-            background-image: url('lawyer-28838_640.png');
-            border-radius: 50%;
-            margin-top: 10px;
+        /* Hover effect for images */
+        .circle-image:hover {
+            transform: scale(1.05);
         }
 
         /* Banner text and button container */
         .banner-text-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
+            position: absolute;
             z-index: 1;
-            padding-left: 20px;
             color: white;
-            height: 100%;
-        }
-
-        /* Vertical text */
-        .banner-text {
+            text-align: center;
             font-size: 30px;
             font-weight: bold;
-            writing-mode: vertical-rl; /* Display text vertically */
-            transform: rotate(180deg); /* Adjust the direction of the vertical text */
+            max-width: 80%;
+            padding: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Banner text */
+        .banner-text {
             margin-bottom: 20px;
         }
 
+        /* Banner button styling */
         .banner-button {
             background-color: white;
             color: black;
@@ -158,7 +151,6 @@ h1, h2, h3 {
             padding: 10px 15px;
             cursor: pointer;
             font-size: 16px;
-            margin-top: 15px;
             transition: background-color 0.3s;
         }
 
@@ -267,9 +259,8 @@ h1, h2, h3 {
       <!-- Banner Section -->
         <div class="banner">
             <div class="image-container">
-                <div class="square-image image"></div>
-                <div class="diamond-image image"></div>
-                <div class="circle-image image"></div>
+                <div class="circle-image circle-image-1"></div>
+                <div class="circle-image circle-image-2"></div>
             </div>
             <div class="banner-text-container">
                 <div class="banner-text">
