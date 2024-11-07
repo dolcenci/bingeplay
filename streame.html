@@ -67,11 +67,11 @@ h1, h2, h3 {
     border-radius: 5px;
 }
 
-    .banner {
+ .banner {
             height: 400px; /* Set the banner height */
             display: flex;
-            align-items: center;
             justify-content: flex-start;
+            align-items: center;
             background-color: #FF6600; /* Solid orange background for the majority */
             padding: 20px;
             border-radius: 8px;
@@ -88,49 +88,66 @@ h1, h2, h3 {
             height: 100%;
             position: absolute;
             left: 0; /* Position the container on the left side */
+            z-index: 0;
+        }
+
+        /* Style for individual images */
+        .image {
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .image:hover {
+            transform: scale(1.05);
         }
 
         /* Square image */
         .square-image {
-            width: 48%; /* Take up 48% of the container width */
-            height: 100px;
-            background-image: url('music 1.jpg');
-            background-size: cover;
-            background-position: center;
-            border-radius: 8px;
+            width: 45%; /* Width of 45% of container */
+            height: 120px; /* Consistent height for all images */
+            background-image: url('analytics-3088958_640.jpg');
         }
 
         /* Diamond-shaped image */
         .diamond-image {
-            width: 48%; /* Take up 48% of the container width */
-            height: 100px;
-            background-image: url('music 2.jpg');   
-            background-size: cover;
-            background-position: center;
+            width: 45%; /* Width of 45% of container */
+            height: 120px;
+            background-image: url('gold-163519_640.jpg');
             clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-            border-radius: 8px;
         }
 
         /* Circle-shaped image */
         .circle-image {
-            width: 100px;
-            height: 100px;
-            background-image: url('music 3.jpg');
-            background-size: cover;
-            background-position: center;
+            width: 120px; /* Fixed size for the circle */
+            height: 120px;
+            background-image: url('lawyer-28838_640.png');
             border-radius: 50%;
             margin-top: 10px;
-            margin-left: auto; /* Center the bottom image */
-            margin-right: auto;
         }
 
-        .banner-text {
+        /* Banner text and button container */
+        .banner-text-container {
             flex: 1;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
             z-index: 1;
+            padding-left: 20px;
+            color: white;
+            height: 100%;
+        }
+
+        /* Vertical text */
+        .banner-text {
+            font-size: 30px;
+            font-weight: bold;
+            writing-mode: vertical-rl; /* Display text vertically */
+            transform: rotate(180deg); /* Adjust the direction of the vertical text */
+            margin-bottom: 20px;
         }
 
         .banner-button {
@@ -140,8 +157,14 @@ h1, h2, h3 {
             border-radius: 5px;
             padding: 10px 15px;
             cursor: pointer;
-            margin-left: 20px;
-            z-index: 1;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+        }
+
+        .banner-button:hover {
+            background-color: #FF6600;
+            color: white;
         }
         
 
@@ -241,17 +264,19 @@ h1, h2, h3 {
             </div>
         </div>
 
-       <!-- Banner Section -->
+      <!-- Banner Section -->
         <div class="banner">
             <div class="image-container">
-                <div class="square-image"></div>
-                <div class="diamond-image"></div>
-                <div class="circle-image"></div>
+                <div class="square-image image"></div>
+                <div class="diamond-image image"></div>
+                <div class="circle-image image"></div>
             </div>
-            <div class="banner-text">
-                Discover New Music, Artists, and More!
+            <div class="banner-text-container">
+                <div class="banner-text">
+                    Discover New Music, Artists, and More!
+                </div>
+                <button class="banner-button">Explore Now</button>
             </div>
-            <button class="banner-button">Explore Now</button>
         </div>
         
         <h1>Artists</h1>
