@@ -67,6 +67,31 @@ h1, h2, h3 {
     border-radius: 5px;
 }
 
+.banner {
+            background-color: #FF6600; /* Banner color */
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+.banner .banner-button {
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+        
+
 .artist-list, .radio-station-list, .song-list, .radio-player {
     background-color: #111727;
     padding: 15px;
@@ -135,7 +160,7 @@ h1, h2, h3 {
 .lyrics {
     margin-top: 20px;
     padding: 10px;
-    background-color: #222;
+    background-color: #00ff00;
     border-radius: 5px;
     white-space: pre-wrap;
 }
@@ -161,6 +186,11 @@ h1, h2, h3 {
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search artists or songs..." />
             </div>
+        </div>
+
+        <div class="banner">
+            <span>Discover New Music, Artists, and More!</span>
+            <button class="banner-button">Explore Now</button>
         </div>
         
         <h1>Artists</h1>
