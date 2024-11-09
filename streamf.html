@@ -190,6 +190,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
         import { getFirestore, collection, getDocs, updateDoc, doc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
@@ -203,6 +204,7 @@
 
         const app = initializeApp(firebaseConfig);
         const firestore = getFirestore(app);
+        const auth = getAuth(app);
 
         const artistList = document.getElementById('artistList');
         const songGrid = document.getElementById('songGrid');
@@ -214,7 +216,26 @@
         const lyricsDisplay = document.getElementById('lyricsDisplay');
         const playlistSidebar = document.getElementById('playlistSidebar');
 
-        const songsData = []; 
+        const songsData = [];
+
+        async function loginUser() {
+            const email = localStorage.getItem('email');
+            const password = localStorage.getItem('password');
+            
+            if (email && password) {
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    console.log('User logged in');
+                    // After login, proceed with fetching data
+                    displayArtists();
+                    displayPlaylist();
+                } catch (error) {
+                    console.error('Error logging in:', error.message);
+                }
+            } else {
+                console.log('No user credentials found in localStorage');
+            }
+        }
 
         async function displayArtists() {
             const querySnapshot = await getDocs(collection(firestore, 'songs'));
@@ -223,7 +244,7 @@
             querySnapshot.forEach((doc) => {
                 const songData = doc.data();
                 artists.add(songData.artist);
-                songsData.push(songData); 
+                songsData.push(songData);
             });
 
             artists.forEach(artist => {
@@ -246,8 +267,8 @@
                     songItem.className = 'song-grid-item';
 
                     const coverImage = document.createElement('img');
-                    coverImage.src = songData.coverURL;
                     coverImage.className = 'song-grid-cover';
+                    coverImage.src = songData.coverURL;
 
                     const titleElement = document.createElement('h3');
                     titleElement.textContent = songData.title;
@@ -272,7 +293,7 @@
         }
 
         async function addToPlaylist(songData) {
-            const userEmail = localStorage.getItem('userEmail');
+            const userEmail = localStorage.getItem('email');
             if (!userEmail) {
                 alert('Please log in to add songs to your playlist.');
                 return;
@@ -304,7 +325,7 @@
         }
 
         async function displayPlaylist() {
-            const userEmail = localStorage.getItem('userEmail');
+            const userEmail = localStorage.getItem('email');
             if (!userEmail) {
                 playlistSidebar.innerHTML = '<li>Please log in to view your playlist.</li>';
                 return;
@@ -340,8 +361,7 @@
         }
 
         window.onload = async () => {
-            await displayArtists();
-            await displayPlaylist(); // Display playlist after loading artists
+            await loginUser();
         };
 
         listenButton.addEventListener('click', () => {
