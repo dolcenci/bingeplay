@@ -15,6 +15,99 @@
             font-family: Arial, sans-serif;
             color: white;
         }
+
+.banner {
+            height: 300px; /* Set the banner height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #FF6600; /* Solid orange background for the majority */
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden; /* Prevent the images from overflowing the banner */
+        }
+
+        /* Image container for the two circular images */
+        .image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 0; /* Images will be behind the text and button */
+        }
+
+        /* Circular image styles */
+        .circle-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        /* First circular image (top-left) */
+        .circle-image-1 {
+            background-image: url('analytics-3088958_640.jpg');
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        /* Second circular image (bottom-right) */
+        .circle-image-2 {
+            background-image: url('gold-163519_640.jpg');
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        /* Hover effect for images */
+        .circle-image:hover {
+            transform: scale(1.05);
+        }
+
+        /* Banner text and button container */
+        .banner-text-container {
+            position: absolute;
+            z-index: 1;
+            color: white;
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            max-width: 80%;
+            padding: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Banner text */
+        .banner-text {
+            margin-bottom: 20px;
+        }
+
+        /* Banner button styling */
+        .banner-button {    
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .banner-button:hover {
+            background-color: #FF6600;
+            color: white;
+        }
+        
         .container {
             width: 100%;
             max-width: 800px;
@@ -115,7 +208,21 @@
             <input type="password" id="password" placeholder="Enter your password" required>
             <button class="login-button" id="loginButton">Login</button>
         </div>
-
+         <!-- Banner Section -->
+        <div class="banner">
+            <div class="image-container">
+                <div class="circle-image circle-image-1"></div>
+                <div class="circle-image circle-image-2"></div>
+            </div>
+            <div class="banner-text-container">
+                <div class="banner-text">
+                    welcome to The bine play artist dashboard, where you can view, edit and curate all your songs as well as see the earnings eac song has made. how the
+                    song revenue system works is that for every play each of your songs get you will receive 0,5 cents which means your total earnings for each song will be the number of plays for that
+                    song multiplied by 0,5 cents. happy Earning.
+                </div>
+                <button class="banner-button">Explore Now</button>
+            </div>
+        </div>
         <h2>Your Songs</h2>
         <div class="song-grid" id="songGrid"></div>
     </div>
