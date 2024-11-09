@@ -248,47 +248,43 @@
             });
 
             artists.forEach(artist => {
-                const artistItem = document.createElement('div');
-                artistItem.className = 'artist-item';
-                artistItem.textContent = artist;
-                artistItem.addEventListener('click', () => displaySongsByArtist(artist));
-                artistList.appendChild(artistItem);
+                const artistElement = document.createElement('div');
+                artistElement.textContent = artist;
+                artistList.appendChild(artistElement);
             });
+
+            displaySongs(songsData); // Display all songs on page load
         }
 
-        async function displaySongsByArtist(artist) {
-            songGrid.innerHTML = '';
-            const querySnapshot = await getDocs(collection(firestore, 'songs'));
+        function displaySongs(songsData) {
+            songGrid.innerHTML = ''; // Clear current song grid
 
-            querySnapshot.forEach((doc) => {
-                const songData = doc.data();
-                if (songData.artist === artist) {
-                    const songItem = document.createElement('div');
-                    songItem.className = 'song-grid-item';
+            songsData.forEach(songData => {
+                const songItem = document.createElement('div');
+                songItem.className = 'song-grid-item';
 
-                    const coverImage = document.createElement('img');
-                    coverImage.className = 'song-grid-cover';
-                    coverImage.src = songData.coverURL;
+                const coverImage = document.createElement('img');
+                coverImage.className = 'song-grid-cover';
+                coverImage.src = songData.coverURL;
 
-                    const titleElement = document.createElement('h3');
-                    titleElement.textContent = songData.title;
+                const titleElement = document.createElement('h3');
+                titleElement.textContent = songData.title;
 
-                    const descriptionElement = document.createElement('p');
-                    descriptionElement.textContent = songData.description;
+                const descriptionElement = document.createElement('p');
+                descriptionElement.textContent = songData.description;
 
-                    const addToPlaylistButton = document.createElement('button');
-                    addToPlaylistButton.className = 'add-to-playlist-btn';
-                    addToPlaylistButton.textContent = 'Add to Playlist';
-                    addToPlaylistButton.onclick = () => addToPlaylist(songData);
+                const addToPlaylistButton = document.createElement('button');
+                addToPlaylistButton.className = 'add-to-playlist-btn';
+                addToPlaylistButton.textContent = 'Add to Playlist';
+                addToPlaylistButton.onclick = () => addToPlaylist(songData);
 
-                    songItem.appendChild(coverImage);
-                    songItem.appendChild(titleElement);
-                    songItem.appendChild(descriptionElement);
-                    songItem.appendChild(addToPlaylistButton);
+                songItem.appendChild(coverImage);
+                songItem.appendChild(titleElement);
+                songItem.appendChild(descriptionElement);
+                songItem.appendChild(addToPlaylistButton);
 
-                    songItem.onclick = () => playSong(songData);
-                    songGrid.appendChild(songItem);
-                }
+                songItem.onclick = () => playSong(songData);
+                songGrid.appendChild(songItem);
             });
         }
 
@@ -304,14 +300,14 @@
             const playlistSnapshot = await getDocs(playlistQuery);
 
             if (playlistSnapshot.empty) {
-                // Create a new playlist
+                // Create a new playlist if it doesn't exist
                 const newPlaylistRef = doc(firestore, 'playlists', userEmail);
                 await setDoc(newPlaylistRef, {
                     email: userEmail,
                     songs: [songData.id]
                 });
             } else {
-                // Append to existing playlist
+                // Update existing playlist
                 const playlistDoc = playlistSnapshot.docs[0];
                 const playlistData = playlistDoc.data();
                 const updatedSongs = [...playlistData.songs, songData.id];
@@ -321,6 +317,7 @@
                 });
             }
 
+            // Refresh the playlist after adding
             displayPlaylist();
         }
 
