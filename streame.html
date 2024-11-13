@@ -225,21 +225,26 @@ h1, h2, h3 {
     margin-top: 15px;
 }
 
-/* Added styles for radio image */
+/* Added styles for radio images */
+.radio-images-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
 .radio-image {
-            width: 100%;
-            max-width: 500px;
+            width: 32%;
             height: auto;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            margin-top: 20px;
-            opacity: 0.8;
             transition: opacity 0.3s ease;
+            transform: scale(0.65); /* Scale the image to 65% */
         }
 
 .radio-image:hover {
             opacity: 1;
-        }        
+        }       
 
 .lyrics {
     margin-top: 20px;
@@ -301,7 +306,10 @@ h1, h2, h3 {
         <div class="song-grid" id="topSongsGrid"></div> <!-- New section for top songs -->
 
         <h2>RADIO</h2>
-        <img src="radio-777219_640.jpg" alt="Radio Theme" class="radio-image">
+        <div class="radio-images-container">
+            <img src="radio-777219_640.jpg" alt="Radio Image 1" class="radio-image">
+            <img src="radio-5045924_640.jpg" alt="Radio Image 2" class="radio-image">
+        </div>
         <h2>Top Internet Radio Stations</h2>
         <div class="radio-station-list" id="radioStationList"></div>
         
