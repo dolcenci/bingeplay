@@ -265,9 +265,7 @@ h1, h2, h3 {
         .radio-image:hover {
             opacity: 1;
         }
-
-    
-
+ 
 .lyrics {
     margin-top: 20px;
     padding: 10px;
@@ -275,6 +273,55 @@ h1, h2, h3 {
     border-radius: 5px;
     white-space: pre-wrap;
 }
+
+/* Style for the audio player */
+.radio-player {
+    background-color: #222; /* Dark background to match the overall theme */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.radio-player h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #FF6600; /* Orange color to match the theme */
+}
+
+audio {
+    width: 100%;
+    max-width: 500px; /* Limit the width to 500px for a cleaner appearance */
+    background-color: #1e1e2f;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    outline: none;
+    margin: 0 auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Custom play/pause button styles for audio player */
+audio::-webkit-media-controls-play-button {
+    background-color: #FF6600; /* Orange color for play button */
+    border-radius: 50%;
+    padding: 8px;
+}
+
+audio::-webkit-media-controls-volume-slider {
+    background-color: #1e1e2f;
+}
+
+/* Customize other media controls if needed */
+audio::-webkit-media-controls {
+    background-color: #222; /* Dark background for the controls */
+    border-radius: 10px;
+}
+
+
+
+        
     </style>
 </head>
 <body>
