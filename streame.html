@@ -225,6 +225,22 @@ h1, h2, h3 {
     margin-top: 15px;
 }
 
+/* Added styles for radio image */
+.radio-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+.radio-image:hover {
+            opacity: 1;
+        }        
+
 .lyrics {
     margin-top: 20px;
     padding: 10px;
@@ -285,6 +301,7 @@ h1, h2, h3 {
         <div class="song-grid" id="topSongsGrid"></div> <!-- New section for top songs -->
 
         <h2>RADIO</h2>
+        <img src="radio-777219_640.jpg" alt="Radio Theme" class="radio-image">
         <h2>Top Internet Radio Stations</h2>
         <div class="radio-station-list" id="radioStationList"></div>
         
