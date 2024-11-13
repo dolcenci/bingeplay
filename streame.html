@@ -274,49 +274,110 @@ h1, h2, h3 {
     white-space: pre-wrap;
 }
 
-/* Style for the audio player */
+ /* Enhanced styling for the audio player */
 .radio-player {
-    background-color: #222; /* Dark background to match the overall theme */
+    background-color: #1a1a2e; /* Dark background to match the theme but with a deeper tone */
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* More prominent shadow */
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin: 0 auto; /* Center the player horizontally */
+    transition: all 0.3s ease-in-out;
+}
+
+.radio-player:hover {
+    transform: scale(1.02); /* Slight zoom effect on hover */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); /* Increased shadow on hover */
 }
 
 .radio-player h3 {
-    font-size: 24px;
+    font-size: 26px;
+    color: #FF6600; /* Bright orange color for the header */
     margin-bottom: 15px;
-    color: #FF6600; /* Orange color to match the theme */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 audio {
     width: 100%;
-    max-width: 500px; /* Limit the width to 500px for a cleaner appearance */
-    background-color: #1e1e2f;
+    max-width: 600px; /* Keep it responsive, but with a larger size */
+    background: linear-gradient(135deg, #FF6600, #FF3366); /* Gradient background for the player */
     border: none;
-    border-radius: 5px;
-    padding: 10px;
+    border-radius: 10px;
+    padding: 15px;
     outline: none;
     margin: 0 auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    color: white; /* Ensure text inside player is readable */
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Custom play/pause button styles for audio player */
+audio:hover {
+    background: linear-gradient(135deg, #FF3366, #FF6600); /* Reverse the gradient on hover */
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4); /* Deeper shadow on hover */
+}
+
+/* Customize the play/pause button */
 audio::-webkit-media-controls-play-button {
-    background-color: #FF6600; /* Orange color for play button */
+    background-color: #FF6600; /* Bright orange color for the play button */
     border-radius: 50%;
-    padding: 8px;
+    padding: 10px;
+    border: 2px solid #fff; /* White border for contrast */
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
+audio::-webkit-media-controls-play-button:hover {
+    background-color: #FF3366; /* Slightly darker orange when hovering */
+    transform: scale(1.1); /* Slightly increase the size of the play button */
+}
+
+/* Customize the volume slider */
 audio::-webkit-media-controls-volume-slider {
-    background-color: #1e1e2f;
+    background-color: #1e1e2f; /* Darker background for the slider */
+    border-radius: 5px;
+    height: 5px;
 }
 
-/* Customize other media controls if needed */
+audio::-webkit-media-controls-volume-slider:hover {
+    background-color: #FF6600; /* Highlight the slider when hovered */
+}
+
+/* Customize other media controls */
 audio::-webkit-media-controls {
-    background-color: #222; /* Dark background for the controls */
+    background-color: #222; /* Darker background for the controls */
     border-radius: 10px;
+}
+
+/* Style the seek bar and other controls */
+audio::-webkit-media-controls-current-time-display,
+audio::-webkit-media-controls-time-remaining-display {
+    color: #FF6600; /* Bright orange for the current time and time remaining */
+    font-weight: bold;
+}
+
+audio::-webkit-media-controls-seekbar {
+    background-color: #333; /* Dark background for seek bar */
+    border-radius: 5px;
+    height: 10px;
+}
+
+audio::-webkit-media-controls-seekbar:hover {
+    background-color: #FF6600; /* Highlight seek bar when hovered */
+}
+
+/* Style the pause button */
+audio::-webkit-media-controls-pause-button {
+    background-color: #FF3366; /* Darker pink color for the pause button */
+    border-radius: 50%;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+}
+
+audio::-webkit-media-controls-pause-button:hover {
+    background-color: #FF6600; /* Switch back to bright orange on hover */
 }
 
 
