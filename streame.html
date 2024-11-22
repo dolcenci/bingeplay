@@ -389,38 +389,36 @@ audio::-webkit-media-controls-pause-button:hover {
 
 
 
-        /* New section for the vinyl disc image */
+/* Container for the vinyl disc */
 .vinyl-container {
-    position: fixed;
-    bottom: 20px; /* Place it at the bottom of the page */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Centering the container */
-    width: 25%; /* Width same as the sidebar */
+    position: absolute;   /* Position it relative to the sidebar */
+    bottom: 0;            /* Align it to the bottom of the sidebar */
+    left: 0;              /* Align it to the left side */
+    width: 100%;          /* Make the vinyl cover the full width of the sidebar */
+    padding: 10px 0;      /* Add a little space for the vinyl to be visible */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10; /* Ensure it stays above other elements */
+    justify-content: center;  /* Center the vinyl disc horizontally */
+    z-index: 2;           /* Make sure the vinyl is above other content */
 }
 
-/* Style for the vinyl image */
+/* Styling the vinyl disc image */
 .vinyl-image {
-    width: 100%; /* Make it cover the full width of the sidebar */
-    max-width: 300px; /* Maximum size to avoid it becoming too large */
-    height: auto; /* Keep its aspect ratio */
-    border-radius: 50%; /* Circular shape */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Shadow for some depth */
-    animation: spin 10s linear infinite; /* Spin infinitely with a 10-second duration */
+    width: 90%;           /* Make the vinyl disc a little smaller than the sidebar width */
+    max-width: 200px;     /* Limit the max size of the vinyl */
+    height: auto;         /* Keep aspect ratio intact */
+    animation: spin 10s linear infinite;  /* Spin the vinyl infinitely */
 }
 
-/* Animation for spinning the vinyl image */
+/* Keyframes for spinning animation */
 @keyframes spin {
-    0% {
-        transform: rotate(0deg); /* Start from 0 degrees */
+    from {
+        transform: rotate(0deg);  /* Start from the initial rotation */
     }
-    100% {
-        transform: rotate(360deg); /* End at 360 degrees */
+    to {
+        transform: rotate(360deg); /* Complete one full rotation */
     }
 }
+
 
 
         
