@@ -17,14 +17,7 @@
 }
 
  
-        .sidebar {
-    width: 25%;
-    height: 100vh; /* Make sidebar cover the full height of the page */
-    background: linear-gradient(135deg, #FF6600, #FF3300); /* Gradient from orange to a darker shade */
-    color: #fff;
-    padding: 20px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
-}
+       
 
 
 .container {
@@ -389,21 +382,31 @@ audio::-webkit-media-controls-pause-button:hover {
 
 
 
+/* Sidebar positioning */
+.sidebar {
+    width: 25%;
+    height: 80%;
+    background-color: #FF6600; /* Orange background */
+    color: #fff;
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+    position: relative;  /* Make sidebar a containing block for the vinyl image */
+}
+
 /* Container for the vinyl disc */
 .vinyl-container {
     position: absolute;   /* Position it relative to the sidebar */
-    bottom: 0;            /* Align it to the bottom of the sidebar */
-    left: 0;              /* Align it to the left side */
+    bottom: 20px;         /* Align it to the bottom of the sidebar */
+    left: 50%;            /* Position it horizontally in the center of the sidebar */
+    transform: translateX(-50%);  /* Adjust for exact centering */
     width: 100%;          /* Make the vinyl cover the full width of the sidebar */
     padding: 10px 0;      /* Add a little space for the vinyl to be visible */
-    display: flex;
-    justify-content: center;  /* Center the vinyl disc horizontally */
     z-index: 2;           /* Make sure the vinyl is above other content */
 }
 
 /* Styling the vinyl disc image */
 .vinyl-image {
-    width: 90%;           /* Make the vinyl disc a little smaller than the sidebar width */
+    width: 80%;           /* Make the vinyl disc smaller than the sidebar width */
     max-width: 200px;     /* Limit the max size of the vinyl */
     height: auto;         /* Keep aspect ratio intact */
     animation: spin 10s linear infinite;  /* Spin the vinyl infinitely */
