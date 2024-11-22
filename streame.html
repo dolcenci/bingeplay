@@ -388,6 +388,41 @@ audio::-webkit-media-controls-pause-button:hover {
 }
 
 
+
+        /* New section for the vinyl disc image */
+.vinyl-container {
+    position: fixed;
+    bottom: 20px; /* Place it at the bottom of the page */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Centering the container */
+    width: 25%; /* Width same as the sidebar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10; /* Ensure it stays above other elements */
+}
+
+/* Style for the vinyl image */
+.vinyl-image {
+    width: 100%; /* Make it cover the full width of the sidebar */
+    max-width: 300px; /* Maximum size to avoid it becoming too large */
+    height: auto; /* Keep its aspect ratio */
+    border-radius: 50%; /* Circular shape */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Shadow for some depth */
+    animation: spin 10s linear infinite; /* Spin infinitely with a 10-second duration */
+}
+
+/* Animation for spinning the vinyl image */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg); /* Start from 0 degrees */
+    }
+    100% {
+        transform: rotate(360deg); /* End at 360 degrees */
+    }
+}
+
+
         
     </style>
 </head>
@@ -467,6 +502,10 @@ audio::-webkit-media-controls-pause-button:hover {
 
         <!-- Section for displaying lyrics -->
         <div class="lyrics" id="lyricsDisplay"></div>
+        <div class="vinyl-container">
+    <img src="vinyl-disc.jpg" alt="Vinyl Disc" class="vinyl-image">
+</div>
+
     </div>
 
     <!-- Import Firebase SDKs -->
