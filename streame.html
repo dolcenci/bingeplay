@@ -382,10 +382,12 @@ audio::-webkit-media-controls-pause-button:hover {
 
 
 
-/* Sidebar positioning */
+ 
+
+        /* Sidebar positioning */
 .sidebar {
     width: 25%;
-    height: 80%;
+    height: 100vh; /* Make sidebar full height of the screen */
     background-color: #FF6600; /* Orange background */
     color: #fff;
     padding: 20px;
@@ -399,15 +401,14 @@ audio::-webkit-media-controls-pause-button:hover {
     bottom: 20px;         /* Align it to the bottom of the sidebar */
     left: 50%;            /* Position it horizontally in the center of the sidebar */
     transform: translateX(-50%);  /* Adjust for exact centering */
-    width: 100%;          /* Make the vinyl cover the full width of the sidebar */
+    width: 200px;         /* Set a fixed width for the vinyl */
     padding: 10px 0;      /* Add a little space for the vinyl to be visible */
     z-index: 2;           /* Make sure the vinyl is above other content */
 }
 
 /* Styling the vinyl disc image */
 .vinyl-image {
-    width: 80%;           /* Make the vinyl disc smaller than the sidebar width */
-    max-width: 200px;     /* Limit the max size of the vinyl */
+    width: 100%;           /* Make the vinyl disc fill the container */
     height: auto;         /* Keep aspect ratio intact */
     animation: spin 10s linear infinite;  /* Spin the vinyl infinitely */
 }
@@ -421,6 +422,7 @@ audio::-webkit-media-controls-pause-button:hover {
         transform: rotate(360deg); /* Complete one full rotation */
     }
 }
+
 
 
 
