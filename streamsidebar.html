@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Artists and Songs</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #111727;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        .container {
+            width: 75%;
+            max-width: 800px;
+            background-color: #111727;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #FF6600; /* Change nav bar to orange */
+            border-radius: 8px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        .search-bar {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .banner {
+            height: 300px; /* Set the banner height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #FF6600; /* Solid orange background for the majority */
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden; /* Prevent the images from overflowing the banner */
+        }
+
+        /* Image container for the two circular images */
+        .image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 0; /* Images will be behind the text and button */
+        }
+
+        /* Circular image styles */
+        .circle-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        /* First circular image (top-left) */
+        .circle-image-1 {
+            background-image: url('boombox-7435237_640.webp');
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        /* Second circular image (bottom-right) */
+        .circle-image-2 {
+            background-image: url('music 1.jpg');
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        /* Hover effect for images */
+        .circle-image:hover {
+            transform: scale(1.05);
+        }
+
+        /* Banner text and button container */
+        .banner-text-container {
+            position: absolute;
+            z-index: 1;
+            color: white;
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            max-width: 80%;
+            padding: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Banner text */
+        .banner-text {
+            margin-bottom: 20px;
+        }
+
+        /* Banner button styling */
+        .banner-button {    
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .banner-button:hover {
+            background-color: #FF6600;
+            color: white;
+        }
+
+        .artist-list, .radio-station-list, .song-list, .radio-player {
+            background-color: #111727;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .artist-item, .radio-station-item {
+            cursor: pointer;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: white;
+        }
+
+        .artist-item:hover, .radio-station-item:hover {
+            background-color: #e0e0e0;
+            color: black;
+        }
+
+        .song-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .song-grid-item {
+            text-align: center;
+            background-color: #1e1e2f;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .song-grid-item:hover {
+            background-color: #333;
+        }
+
+        .song-grid-cover {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .description {
+            margin: 15px 0;
+            color: white;
+        }
+
+        .listen-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .listen-button:hover {
+            background-color: #FF6600;
+            color: white;
+        }
+
+        /* Sidebar positioning */
+        .sidebar {
+            width: 25%;
+            height: 100vh;
+            background-color: #00ff00;
+            color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .vinyl-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            padding: 10px 0;
+            z-index: 2;
+        }
+
+        .vinyl-image {
+            width: 100%;
+            height: auto;
+            animation: spin 10s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .top-songs-list {
+            margin-top: 30px;
+        }
+
+        .top-song-item {
+            cursor: pointer;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: white;
+        }
+
+        .top-song-item:hover {
+            background-color: #e0e0e0;
+            color: black;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Sidebar</h2>
+        <p>Navigation or other content can go here.</p>
+
+        <div class="vinyl-container">
+            <img src="silhouette-5477317_640.webp" alt="Vinyl Disc" class="vinyl-image">
+        </div>
+
+        <h2>Top Songs</h2>
+        <div class="top-songs-list" id="topSongsSidebar"></div>
+    </div>
+
+    <div class="container">
+        <div class="nav">
+            <div>
+                <a href="#">Home</a>
+                <a href="#">Podcasts</a>
+                <a href="#">Internet Radio</a>
+                <a href="globalcharts2.html">Global Charts 2</a>
+                <a href="globalcharts.html">Global Charts</a>
+                <a href="profile.html">Profile</a>
+                <a href="signup.html">Sign Up</a>
+                <a href="songupload.html">Song Upload</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search...">
+            </div>
+        </div>
+
+        <div class="banner">
+            <div class="image-container">
+                <div class="circle-image circle-image-1"></div>
+                <div class="circle-image circle-image-2"></div>
+            </div>
+            <div class="banner-text-container">
+                <p class="banner-text">Your Music, Your World!</p>
+                <button class="banner-button">Explore</button>
+            </div>
+        </div>
+
+        <div class="artist-list">
+            <h2>Artists</h2>
+            <div id="artistList"></div>
+        </div>
+
+        <div class="song-list">
+            <h2>Song List</h2>
+            <div id="songList"></div>
+        </div>
+
+        <div class="radio-player">
+            <h3>Radio Station</h3>
+            <div id="radioPlayer"></div>
+        </div>
+    </div>
+
+    <script>
+        const topSongs = [
+            { id: 1, title: "Song 1" },
+            { id: 2, title: "Song 2" },
+            { id: 3, title: "Song 3" },
+            { id: 4, title: "Song 4" },
+            { id: 5, title: "Song 5" }
+        ];
+
+        const songList = document.getElementById('topSongsSidebar');
+
+        topSongs.forEach(song => {
+            const songItem = document.createElement('div');
+            songItem.classList.add('top-song-item');
+            songItem.textContent = song.title;
+            songItem.onclick = () => playSong(song.id);
+            songList.appendChild(songItem);
+        });
+
+        function playSong(songId) {
+            // Logic to play song based on songId
+            alert('Playing Song ID: ' + songId);
+        }
+    </script>
+</body>
+</html>
