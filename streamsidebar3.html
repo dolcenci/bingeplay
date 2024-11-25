@@ -626,6 +626,7 @@ audio::-webkit-media-controls-pause-button:hover {
         }
 
         async function displayTopSongs() {
+             topSongsSidebar.innerHTML = ''; // Clear previous songs
             topSongsGrid.innerHTML = ''; // Clear previous songs
             const querySnapshot = await getDocs(collection(firestore, 'songs'));
             const songsArray = [];
@@ -659,8 +660,35 @@ audio::-webkit-media-controls-pause-button:hover {
 
                 songItem.onclick = () => playSong(songData); // Pass song data to playSong
                 topSongsGrid.appendChild(songItem);
-                 topSongsSidebar.appendChild(songItem);
+                // topSongsSidebar.appendChild(songItem);
             });
+
+
+            /*my stuff*/
+const songsArray2 = [];
+  querySnapshot.forEach((doc) => {
+                const songData = doc.data();
+                songsArray2.push(songData);
+            });  
+
+   songsArray2.sort((a, b) => b.plays - a.plays); // Sort songs by plays
+
+            songsArray2.forEach((songData) => {
+                const songItem2 = document.createElement('div');
+                songItem2.className = 'song-sidebar-item';
+                songItem2.textContent = songData.title;
+
+                songItem2.onclick = () => {
+                    playSong(songData); // Play song on sidebar click
+                };
+
+                topSongsSidebar.appendChild(songItem);
+            });  
+
+            /*mystuff end*/
+
+
+            
         }
 
         function playSong(songData) {
