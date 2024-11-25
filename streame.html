@@ -383,10 +383,7 @@ audio::-webkit-media-controls-pause-button:hover {
 
  
        
-
-
-
-                /* Sidebar positioning */
+/* Sidebar positioning */
 .sidebar {
     width: 25%;
     height: 100vh; /* Make sidebar full height of the screen */
@@ -394,7 +391,10 @@ audio::-webkit-media-controls-pause-button:hover {
     color: #fff;
     padding: 20px;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
-    position: relative;  /* Make sidebar a containing block for the vinyl image */
+    position: fixed;  /* Make the sidebar fixed */
+    top: 0; /* Keep it at the top of the page */
+    left: 0; /* Keep it aligned to the left */
+    z-index: 10; /* Ensure it's above other content */
 }
 
 /* Container for the vinyl disc */
@@ -424,6 +424,10 @@ audio::-webkit-media-controls-pause-button:hover {
         transform: rotate(360deg); /* Complete one full rotation */
     }
 }
+
+
+
+ 
 
 
         
@@ -463,7 +467,7 @@ audio::-webkit-media-controls-pause-button:hover {
             </div>
             <div class="banner-text-container">
                 <div class="banner-text">
-                    Welcome To Binge Play, Your Number One Music Streaming site . 
+                    Welcome To binger, Your Number One Music Streaming site . 
                     Weve built you an outstanding music streaming platform that allows you to 
                     Discover New Music, Artists, and More!
                 </div>
