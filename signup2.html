@@ -26,6 +26,7 @@
         .image-container {
             flex: 1;
             background-size: cover;
+            background-position: center;
         }
         .form-container {
             flex: 1;
@@ -215,14 +216,8 @@
         // Google Sign Up
         document.getElementById('googleSignUp').addEventListener('click', () => {
             signInWithPopup(auth, provider)
-                .then(async (result) => {
-                    const user = result.user;
-                    await setDoc(doc(firestore, 'users', user.uid), {
-                        name: user.displayName,
-                        email: user.email,
-                        photoURL: user.photoURL
-                    });
-                    window.location.href = 'index.html';
+                .then((result) => {
+                    window.location.href = 'profile.html';
                 })
                 .catch((error) => {
                     alert(error.message);
@@ -311,8 +306,8 @@
 
         // Update image in the image container based on the current step
         function updateImage(step) {
-            imageStep.style.backgroundImage = url('${images[step]}');
-        }   
+            imageStep.style.backgroundImage = `url('${images[step]}')`;
+        }
 
         // Navigation between registration steps
         document.getElementById('nextToStep2').addEventListener('click', () => {
