@@ -242,6 +242,21 @@
         </div>
     </div>
 
+    <button class="edit-button" id="addBankingButton" style="display: none; margin: 20px 0;">Add Banking Details</button>
+
+<!-- Add this modal at the bottom with other modals -->
+<div id="bankingModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeBankingModal">&times;</span>
+        <h2>Add Banking Details</h2>
+        <input type="text" id="bankName" placeholder="Bank Name" required>
+        <input type="text" id="accountNumber" placeholder="Account Number" required>
+        <input type="text" id="branchCode" placeholder="Branch Code" required>
+        <input type="text" id="accountType" placeholder="Account Type (e.g., Savings/Cheque)" required>
+        <button class="edit-button" id="saveBankingButton">Save Details</button>
+    </div>
+</div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
         import { getFirestore, collection, getDocs, query, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
@@ -270,6 +285,21 @@
         const updateButton = document.getElementById('updateButton');
 
         let currentSongId = '';
+
+// Add these variables to your existing script
+    const addBankingButton = document.getElementById('addBankingButton');
+    const bankingModal = document.getElementById('bankingModal');
+    const closeBankingModal = document.getElementById('closeBankingModal');
+
+    // Add these event listeners to your existing script
+    addBankingButton.addEventListener('click', () => {
+        bankingModal.style.display = 'block';
+    });
+
+    closeBankingModal.onclick = () => {
+        bankingModal.style.display = 'none';
+    };
+        
 
         async function displaySongs(userId) {
             songGrid.innerHTML = ''; // Clear previous songs
@@ -365,6 +395,15 @@
             if (event.target === editModal) {
                 editModal.style.display = 'none'; // Close modal if clicked outside
             }
+
+if (event.target === editModal) {
+            editModal.style.display = 'none';
+        }
+        if (event.target === bankingModal) {
+            bankingModal.style.display = 'none';
+        }
+
+            
         };
 
         loginButton.addEventListener('click', async () => {
@@ -375,6 +414,7 @@
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const userId = userCredential.user.uid; // Get user ID
                 loginForm.style.display = 'none'; // Hide login form
+                addBankingButton.style.display = 'inline-block';
                 await displaySongs(userId); // Fetch and display songs
             } catch (error) {
                 alert('Login failed: ' + error.message);
