@@ -198,6 +198,60 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+/* Add these styles to your existing CSS */
+.modal-content input,
+.modal-content select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #37374f;
+    border-radius: 5px;
+    background-color: #2a2a3f;
+    color: white;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.modal-content input:focus {
+    outline: none;
+    border-color: #008000;
+    box-shadow: 0 0 8px rgba(0, 128, 0, 0.3);
+}
+
+.modal-content button.edit-button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background-color: #008000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content button.edit-button:hover {
+    background-color: #006400;
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #ffd700;
+}
+
+.modal-content {
+    padding: 30px;
+}
+
+/* Add specific spacing for banking modal inputs */
+#bankingModal .modal-content input {
+    margin-bottom: 15px;
+}
+        
     </style>
 </head>
 <body>
@@ -252,8 +306,10 @@
         <input type="text" id="bankName" placeholder="Bank Name" required>
         <input type="text" id="accountNumber" placeholder="Account Number" required>
         <input type="text" id="branchCode" placeholder="Branch Code" required>
-        <input type="text" id="accountType" placeholder="Account Type (e.g., Savings/Cheque)" required>
-        <button class="edit-button" id="saveBankingButton">Save Details</button>
+        <input type="text" id="accountType" placeholder="Account Type" required>
+        <button class="edit-button" id="saveBankingButton">
+            Save Banking Details
+        </button>
     </div>
 </div>
 
