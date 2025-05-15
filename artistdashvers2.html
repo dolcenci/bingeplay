@@ -323,10 +323,238 @@
         <!-- Rest of the content (hidden until login) -->
         <h1 style="display: none;">Artist Dashboard</h1>
         <div class="banner" style="display: none;">
-            <!-- ... banner content ... -->
+           <div class="image-container">
+                <div class="circle-image circle-image-1"></div>
+                <div class="circle-image circle-image-2"></div>
+            </div>
+            <div class="banner-text-container">
+                <div class="banner-text">
+                    welcome to The binger artist dashboard, where you can view, edit and curate all your songs as well as see the earnings eac song has made. how the
+                    song revenue system works is that for every play each of your songs get you will receive 0,5 cents which means your total earnings for each song will be the number of plays for that
+                    song multiplied by 0,5 cents. happy Earning.
+                </div>
+                <button class="banner-button">Explore Now</button>
+            </div>
+            
         </div>
         <!-- ... rest of original HTML ... -->
+
+
+
+        <h2>Your Songs</h2>
+        <div class="song-grid" id="songGrid"></div>
+    </div>
+
+    <!-- Modal for Editing Song -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Edit Song</h2>
+            <input type="text" id="editSongTitle" placeholder="Song Title" required>
+            <input type="text" id="editArtistName" placeholder="Artist Name" required>
+            <textarea id="editDescription" placeholder="Song Description" rows="3" required></textarea>
+            <input type="file" id="editAudioUpload" accept="audio/*">
+            <input type="file" id="editCoverUpload" accept="image/*">
+            <textarea id="editLyrics" placeholder="Type lyrics here..." rows="5"></textarea>
+            <button class="edit-button" id="updateButton">Update Song</button>
+        </div>
+    </div>
+
+    <button class="edit-button" id="addBankingButton" style="display: none; margin: 20px 0;">Add Banking Details</button>
+
+<!-- Add this modal at the bottom with other modals -->
+<div id="bankingModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeBankingModal">&times;</span>
+        <h2>Add Banking Details</h2>
+        <input type="text" id="bankName" placeholder="Bank Name" required>
+        <input type="text" id="accountNumber" placeholder="Account Number" required>
+        <input type="text" id="branchCode" placeholder="Branch Code" required>
+        <input type="text" id="accountType" placeholder="Account Type" required>
+        <button class="edit-button" id="saveBankingButton">
+            Save Banking Details
+        </button>
+    </div>
+</div>
+<iframe width="480" height="190" src="https://www.youtube.com/embed/GoTMbW0RVjI" title="Unlock Your Music Earnings Dashboard! VEED" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+
+
+        
     </div>
     <!-- ... rest of original HTML ... -->
+
+
+<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
+            authDomain: "binge-play.firebaseapp.com",
+            databaseURL: "https://binge-play-default-rtdb.firebaseio.com",
+            projectId: "binge-play",
+            storageBucket: "binge-play.appspot.com",
+            messagingSenderId: "50709965408",
+            appId: "1:50709965408:web:bcb17a6ce85500f39df105"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const firestore = getFirestore(app);
+        const auth = getAuth(app);
+        const storage = getStorage(app);
+        const songGrid = document.getElementById('songGrid');
+        const loginButton = document.getElementById('loginButton');
+        const loginForm = document.getElementById('loginForm');
+        const editModal = document.getElementById('editModal');
+        const closeModal = document.getElementById('closeModal');
+        const updateButton = document.getElementById('updateButton');
+
+        let currentSongId = '';
+
+// Add these variables to your existing script
+    const addBankingButton = document.getElementById('addBankingButton');
+    const bankingModal = document.getElementById('bankingModal');
+    const closeBankingModal = document.getElementById('closeBankingModal');
+
+    // Add these event listeners to your existing script
+    addBankingButton.addEventListener('click', () => {
+        bankingModal.style.display = 'block';
+    });
+
+    closeBankingModal.onclick = () => {
+        bankingModal.style.display = 'none';
+    };
+        
+
+        async function displaySongs(userId) {
+            songGrid.innerHTML = ''; // Clear previous songs
+            const songQuery = query(collection(firestore, 'songs'), where('userId', '==', userId));
+            const querySnapshot = await getDocs(songQuery);
+
+            querySnapshot.forEach((doc) => {
+                const songData = doc.data();
+                const songItem = document.createElement('div');
+                songItem.className = 'song-grid-item';
+
+                const coverImage = document.createElement('img');
+                coverImage.src = songData.coverURL;
+                coverImage.className = 'song-grid-cover';
+
+                const titleElement = document.createElement('h3');
+                titleElement.textContent = songData.title;
+
+                const playsElement = document.createElement('p');
+                const earnings = (songData.plays * 0.5).toFixed(2); // Calculate earnings in Rands
+                playsElement.textContent = Plays: ${songData.plays};
+
+                const earningsElement = document.createElement('p');
+                earningsElement.className = 'earnings';
+                earningsElement.textContent = Earnings: R${earnings};
+
+                const editButton = document.createElement('button');
+                editButton.className = 'edit-button';
+                editButton.textContent = 'Edit Song';
+                editButton.onclick = () => {
+                    currentSongId = doc.id; // Store the current song ID
+                    openEditModal(songData);
+                };  
+
+                songItem.appendChild(coverImage);
+                songItem.appendChild(titleElement);
+                songItem.appendChild(playsElement);
+                songItem.appendChild(earningsElement);
+                songItem.appendChild(editButton);
+
+                songGrid.appendChild(songItem);
+            });
+        }
+
+        function openEditModal(songData) {
+            document.getElementById('editSongTitle').value = songData.title;
+            document.getElementById('editArtistName').value = songData.artist;
+            document.getElementById('editDescription').value = songData.description;
+            document.getElementById('editLyrics').value = songData.lyrics || '';
+            editModal.style.display = 'block'; // Show modal
+        }
+
+        updateButton.addEventListener('click', async () => {
+            const updatedTitle = document.getElementById('editSongTitle').value;
+            const updatedArtist = document.getElementById('editArtistName').value;
+            const updatedDescription = document.getElementById('editDescription').value;
+            const updatedLyrics = document.getElementById('editLyrics').value;
+            const audioFile = document.getElementById('editAudioUpload').files[0];
+            const coverFile = document.getElementById('editCoverUpload').files[0];
+
+            const songRef = doc(firestore, 'songs', currentSongId);
+
+            if (audioFile) {
+                const audioRef = ref(storage, songs/${currentSongId}/audio);
+                await uploadBytes(audioRef, audioFile);
+                const audioURL = await getDownloadURL(audioRef);
+                await updateDoc(songRef, { audioURL });
+            }
+
+            if (coverFile) {
+                const coverRef = ref(storage, songs/${currentSongId}/cover);
+                await uploadBytes(coverRef, coverFile);
+                const coverURL = await getDownloadURL(coverRef);
+                await updateDoc(songRef, { coverURL });
+            }
+
+            await updateDoc(songRef, {
+                title: updatedTitle,
+                artist: updatedArtist,
+                description: updatedDescription,
+                lyrics: updatedLyrics
+            });
+
+            editModal.style.display = 'none'; // Close modal
+            displaySongs(currentSongId); // Refresh the song list
+        });
+
+        closeModal.onclick = () => {
+            editModal.style.display = 'none'; // Close modal
+        };
+
+        window.onclick = (event) => {
+            if (event.target === editModal) {
+                editModal.style.display = 'none'; // Close modal if clicked outside
+            }
+
+if (event.target === editModal) {
+            editModal.style.display = 'none';
+        }
+        if (event.target === bankingModal) {
+            bankingModal.style.display = 'none';
+        }
+
+            
+        };
+
+        loginButton.addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const userId = userCredential.user.uid; // Get user ID
+                loginForm.style.display = 'none'; // Hide login form
+                addBankingButton.style.display = 'inline-block';
+                await displaySongs(userId); // Fetch and display songs
+            } catch (error) {
+                alert('Login failed: ' + error.message);
+            }
+        });
+    </script>
+
+
+
+
+
+    
 </body>
 </html>
