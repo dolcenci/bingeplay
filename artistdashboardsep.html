@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artist Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #111727;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    h1, h2 {
+      color: white;
+      text-align: center;
+    }
+
+    .banner {
+      min-height: 160px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #008000;
+      padding: 40px 20px;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+
+    .image-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 0;
+    }
+
+    .circle-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .circle-image-1 {
+      background-image: url('analytics-3088958_640.jpg');
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+
+    .circle-image-2 {
+      background-image: url('gold-163519_640.jpg');
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+    }
+
+    .circle-image:hover {
+      transform: scale(1.05);
+    }
+
+    .banner-text-container {
+      position: relative;
+      z-index: 1;
+      color: white;
+      text-align: center;
+      font-size: 15px;
+      font-weight: bold;
+      max-width: 90%;
+      padding: 20px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    }
+
+    .banner-text {
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .banner-button {
+      background-color: orange;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .banner-button:hover {
+      background-color: #FF6600;
+      color: white;
+    }
+
+    .song-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .song-grid-item {
+      text-align: center;
+      background-color: #1e1e2f;
+      padding: 15px;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .song-grid-item:hover {
+      background-color: #333;
+    }
+
+    .song-grid-cover {
+      width: 100%;
+      max-width: 140px;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .earnings {
+      margin-top: 10px;
+      color: #ffd700;
+    }
+
+    .login-form {
+      margin: 20px auto;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .login-button, .edit-button, .claim-button {
+      background-color: white;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .claim-section {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .claim-button {
+      background-color: #ffd700;
+      font-weight: bold;
+      margin: 20px 0;
+      display: none;
+    }
+
+    .claim-button:hover {
+      background-color: #ffc000;
+    }
+
+    .video-section {
+      margin: 40px auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    iframe {
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      max-width: 100%;
+    }
+
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 100; 
+      left: 0;
+      top: 0;
+      width: 100%; 
+      height: 100%; 
+      overflow: auto; 
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-content {
+      background-color: #1e1e2f;
+      margin: 5% auto; 
+      padding: 30px;
+      border: 1px solid #888;
+      width: 90%; 
+      max-width: 600px; 
+      border-radius: 8px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover, .close:focus {
+      color: white;
+      cursor: pointer;
+    }
+
+    .modal-content input,
+    .modal-content textarea,
+    .modal-content select {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #37374f;
+      border-radius: 5px;
+      background-color: #2a2a3f;
+      color: white;
+      font-size: 14px;
+    }
+
+    .modal-content input:focus {
+      outline: none;
+      border-color: #008000;
+      box-shadow: 0 0 8px rgba(0, 128, 0, 0.3);
+    }
+
+    .modal-content button.edit-button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background-color: #008000;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .modal-content button.edit-button:hover {
+      background-color: #006400;
+    }
+
+    .modal-content h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #ffd700;
+    }
+
+    #disclaimerModal .modal-content {
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    #disclaimerModal .modal-content p {
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    #disclaimerModal .modal-content h3 {
+      color: #ffd700;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Artist Dashboard</h1>
+
+    <div class="login-form" id="loginForm">
+      <input type="email" id="email" placeholder="Enter your email" required>
+      <input type="password" id="password" placeholder="Enter your password" required>
+      <button class="login-button" id="loginButton">Login</button>
+    </div>
+
+    <div class="banner">
+      <div class="image-container">
+        <div class="circle-image circle-image-1"></div>
+        <div class="circle-image circle-image-2"></div>
+      </div>
+      <div class="banner-text-container">
+        <div class="banner-text">
+          Welcome to The Binger artist dashboard, where you can view, edit, and curate your songs as well as see the earnings each song has made. For every play, you earn 0.5 cents. Earnings = plays × 0.5 cents. Happy Earning!
+        </div>
+        <button class="banner-button">Explore Now</button>
+      </div>
+    </div>
+
+    <div class="claim-section">
+      <button class="claim-button" id="claimButton">Claim Earnings</button>
+    </div>
+
+    <h2>Your Songs</h2>
+    <div class="song-grid" id="songGrid"></div>
+
+    <div class="video-section">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/GoTMbW0RVjI" title="Unlock Your Music Earnings Dashboard! VEED" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h2>Edit Song</h2>
+      <input type="text" id="editSongTitle" placeholder="Song Title" required>
+      <input type="text" id="editArtistName" placeholder="Artist Name" required>
+      <textarea id="editDescription" placeholder="Song Description" rows="3" required></textarea>
+      <input type="file" id="editAudioUpload" accept="audio/*">
+      <input type="file" id="editCoverUpload" accept="image/*">
+      <textarea id="editLyrics" placeholder="Type lyrics here..." rows="5"></textarea>
+      <button class="edit-button" id="updateButton">Update Song</button>
+    </div>
+  </div>
+
+  <button class="edit-button" id="addBankingButton" style="display: none; margin: 20px auto; display: block;">Add Banking Details</button>
+
+  <div id="disclaimerModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeDisclaimerModal">&times;</span>
+      <h2>Earnings Disclaimer</h2>
+      <h3>Payment Terms</h3>
+      <p>By claiming your earnings, you acknowledge and agree to the following payment terms:</p>
+      <p>1. You will receive R0.05 (five South African cents) for each qualified play of your song on the Binger platform.</p>
+      <p>2. A qualified play is defined as a stream of at least 30 seconds of your song by a registered Binger user.</p>
+      <p>3. Earnings are calculated daily and updated in your dashboard.</p>
+      <h3>Payment Schedule</h3>
+      <p>1. Payments are processed monthly on the first business day of each month.</p>
+      <p>2. To receive payment, your account must have a minimum balance of R100 (one hundred South African Rand).</p>
+      <p>3. Payments will be made via electronic transfer to your designated bank account.</p>
+      <h3>Tax Obligations</h3>
+      <p>1. You are solely responsible for declaring and paying any taxes due on your earnings from Binger.</p>
+      <p>2. Binger will provide you with a statement of earnings at the end of each tax year for your records.</p>
+      <p>3. Binger may be required by law to report your earnings to tax authorities in certain circumstances.</p>
+      <h3>Content Ownership</h3>
+      <p>1. You warrant that you own all rights to the content you upload to Binger or have obtained all necessary permissions.</p>
+      <p>2. You retain all ownership rights to your content while granting Binger a license to distribute your content on the platform.</p>
+      <h3>General Terms</h3>
+      <p>1. Binger reserves the right to modify these payment terms with 30 days notice.</p>
+      <p>2. Any disputes regarding payments must be submitted in writing within 30 days of the payment date.</p>
+      <p>3. Binger may withhold payments if we suspect fraudulent activity or violation of our terms of service.</p>
+      <div id="disclaimerCheckbox">
+        <input type="checkbox" id="agreeCheckbox">
+        <label for="agreeCheckbox">I have read and agree to the terms of this earnings disclaimer</label>
+      </div>
+      <button class="edit-button" id="acceptDisclaimerButton" disabled>Accept and Continue</button>
+    </div>
+  </div>
+
+  <div id="bankingModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeBankingModal">&times;</span>
+      <h2>Add Banking Details</h2>
+      <input type="text" id="bankName" placeholder="Bank Name" required>
+      <input type="text" id="accountNumber" placeholder="Account Number" required>
+      <input type="text" id="branchCode" placeholder="Branch Code" required>
+      <input type="text" id="accountType" placeholder="Account Type" required>
+      <button class="edit-button" id="saveBankingButton">Save Banking Details</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCCtmtSj_BMNllDVZWsIvF_oDo5gQYFmC8",
+      authDomain: "binge-play.firebaseapp.com",
+      databaseURL: "https://binge-play-default-rtdb.firebaseio.com",
+      projectId: "binge-play",
+      storageBucket: "binge-play.appspot.com",
+      messagingSenderId: "50709965408",
+      appId: "1:50709965408:web:bcb17a6ce85500f39df105"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const firestore = getFirestore(app);
+    const auth = getAuth(app);
+    const storage = getStorage(app);
+
+    const songGrid = document.getElementById('songGrid');
+    const loginButton = document.getElementById('loginButton');
+    const loginForm = document.getElementById('loginForm');
+    const editModal = document.getElementById('editModal');
+    const closeModal = document.getElementById('closeModal');
+    const updateButton = document.getElementById('updateButton');
+    const claimButton = document.getElementById('claimButton');
+    const disclaimerModal = document.getElementById('disclaimerModal');
+    const closeDisclaimerModal = document.getElementById('closeDisclaimerModal');
+    const agreeCheckbox = document.getElementById('agreeCheckbox');
+    const acceptDisclaimerButton = document.getElementById('acceptDisclaimerButton');
+    const addBankingButton = document.getElementById('addBankingButton');
+    const bankingModal = document.getElementById('bankingModal');
+    const closeBankingModal = document.getElementById('closeBankingModal');
+
+    let currentSongId = '';
+    let currentUserId = '';
+
+    addBankingButton.addEventListener('click', () => {
+      bankingModal.style.display = 'block';
+    });
+
+    closeBankingModal.onclick = () => {
+      bankingModal.style.display = 'none';
+    };
+
+    claimButton.addEventListener('click', () => {
+      disclaimerModal.style.display = 'block';
+    });
+
+    closeDisclaimerModal.onclick = () => {
+      disclaimerModal.style.display = 'none';
+    };
+
+    agreeCheckbox.addEventListener('change', (e) => {
+      acceptDisclaimerButton.disabled = !e.target.checked;
+    });
+
+    acceptDisclaimerButton.addEventListener('click', () => {
+      alert('Thank you for accepting the terms. You may now proceed to claim your earnings.');
+      disclaimerModal.style.display = 'none';
+      bankingModal.style.display = 'block';
+    });
+
+    async function displaySongs(userId) {
+      songGrid.innerHTML = '';
+      const songQuery = query(collection(firestore, 'songs'), where('userId', '==', userId));
+      const querySnapshot = await getDocs(songQuery);
+
+      querySnapshot.forEach((docSnap) => {
+        const songData = docSnap.data();
+        const songItem = document.createElement('div');
+        songItem.className = 'song-grid-item';
+
+        const coverImage = document.createElement('img');
+        coverImage.src = songData.coverURL;
+        coverImage.className = 'song-grid-cover';
+
+        const titleElement = document.createElement('h3');
+        titleElement.textContent = songData.title;
+
+        const playsElement = document.createElement('p');
+        playsElement.textContent = `Plays: ${songData.plays}`;
+
+        const earnings = (songData.plays * 0.5).toFixed(2);
+        const earningsElement = document.createElement('p');
+        earningsElement.className = 'earnings';
+        earningsElement.textContent = `Earnings: R${earnings}`;
+
+        const editButton = document.createElement('button');
+        editButton.className = 'edit-button';
+        editButton.textContent = 'Edit Song';
+        editButton.onclick = () => {
+          currentSongId = docSnap.id;
+          openEditModal(songData);
+        };
+
+        songItem.appendChild(coverImage);
+        songItem.appendChild(titleElement);
+        songItem.appendChild(playsElement);
+        songItem.appendChild(earningsElement);
+        songItem.appendChild(editButton);
+
+        songGrid.appendChild(songItem);
+      });
+    }
+
+    function openEditModal(songData) {
+      document.getElementById('editSongTitle').value = songData.title;
+      document.getElementById('editArtistName').value = songData.artist;
+      document.getElementById('editDescription').value = songData.description;
+      document.getElementById('editLyrics').value = songData.lyrics || '';
+      editModal.style.display = 'block';
+    }
+
+    closeModal.onclick = () => {
+      editModal.style.display = 'none';
+    };
+
+    updateButton.addEventListener('click', async () => {
+      const title = document.getElementById('editSongTitle').value;
+      const artist = document.getElementById('editArtistName').value;
+      const description = document.getElementById('editDescription').value;
+      const lyrics = document.getElementById('editLyrics').value;
+      const audioFile = document.getElementById('editAudioUpload').files[0];
+      const coverFile = document.getElementById('editCoverUpload').files[0];
+
+      let audioURL = null;
+      let coverURL = null;
+
+      if (audioFile) {
+        const audioRef = ref(storage, `songs/${currentUserId}/${currentSongId}/audio.mp3`);
+        await uploadBytes(audioRef, audioFile);
+        audioURL = await getDownloadURL(audioRef);
+      }
+
+      if (coverFile) {
+        const coverRef = ref(storage, `songs/${currentUserId}/${currentSongId}/cover.jpg`);
+        await uploadBytes(coverRef, coverFile);
+        coverURL = await getDownloadURL(coverRef);
+      }
+
+      const songRef = doc(firestore, 'songs', currentSongId);
+      await updateDoc(songRef, {
+        title,
+        artist,
+        description,
+        lyrics,
+        ...(audioURL && { audioURL }),
+        ...(coverURL && { coverURL })
+      });
+
+      alert('Song updated successfully!');
+      editModal.style.display = 'none';
+      displaySongs(currentUserId);
+    });
+
+    loginButton.addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        currentUserId = userCredential.user.uid;
+        loginForm.style.display = 'none';
+        claimButton.style.display = 'inline-block';
+        addBankingButton.style.display = 'block';
+        displaySongs(currentUserId);
+      } catch (error) {
+        alert('Login failed: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
