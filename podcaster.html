@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BingePlay — Podcasts & Audiobooks</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#06b6d4; --muted:#94a3b8; --glass: rgba(255,255,255,0.03);
+      --radius:14px; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%; margin:0; background:linear-gradient(180deg,#041426,#07192a); color:#e6eef6;}
+    .wrap{max-width:1100px;margin:36px auto;padding:28px;}
+    header{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+    header h1{margin:0;font-size:22px;letter-spacing:0.2px}
+    .sub{color:var(--muted); font-size:13px}
+    .grid{display:grid;grid-template-columns:1fr 350px; gap:20px}
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:var(--radius); padding:18px; box-shadow: 0 6px 18px rgba(2,6,23,0.6);}
+    .list{display:flex;flex-direction:column;gap:12px}
+    .item{display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px;cursor:pointer;background:transparent;transition:all .14s}
+    .item:hover{transform:translateY(-4px);box-shadow: 0 6px 18px rgba(0,0,0,0.45)}
+    .thumb{width:64px;height:64px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#4f46e5);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .meta{flex:1;min-width:0}
+    .title{font-weight:600}
+    .desc{font-size:13px;color:var(--muted);margin-top:4px}
+    .playbtn{padding:8px 12px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);font-size:13px;color:var(--muted)}
+    .player-panel{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+    audio{width:100%; outline:none}
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    .section-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .small{font-size:12px;color:var(--muted)}
+    iframe{border:none;border-radius:12px;overflow:hidden}
+    @media(max-width:920px){.grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div style="width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:700">BP</div>
+      <div>
+        <h1>BingePlay — Podcasts & Audiobooks</h1>
+        <div class="sub">Click any podcast or audiobook below — it will start playing in the player.</div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- left column -->
+      <div>
+        <!-- Public-domain podcasts -->
+        <div class="panel" style="margin-bottom:18px">
+          <div class="section-title">
+            <strong>Playable Podcasts (Public-Domain)</strong>
+            <span class="small">Click to play directly</span>
+          </div>
+          <div class="list" id="publicPodcastList"></div>
+        </div>
+
+        <!-- Public-domain audiobooks -->
+        <div class="panel" style="margin-bottom:18px">
+          <div class="section-title">
+            <strong>Audiobooks (Public-Domain)</strong>
+            <span class="small">Click to play directly</span>
+          </div>
+          <div class="list" id="audiobookList"></div>
+        </div>
+
+        <!-- Official embedded podcasts -->
+        <div class="panel" style="margin-bottom:18px">
+          <div class="section-title">
+            <strong>Top Podcasts (Embedded Players)</strong>
+            <span class="small">Click to load below</span>
+          </div>
+          <div class="list" id="embedList"></div>
+        </div>
+
+        <div class="panel" id="embedContainer">Click an item above to load official player here.</div>
+      </div>
+
+      <!-- right column: player -->
+      <div>
+        <div class="panel player-panel">
+          <div style="display:flex;gap:12px;align-items:center;">
+            <div style="width:72px;height:72px;border-radius:10px;background:linear-gradient(135deg,#06b6d4,#334155);display:flex;align-items:center;justify-content:center;font-weight:700" id="playerThumb">♪</div>
+            <div style="flex:1">
+              <div id="playerTitle" style="font-weight:700">Nothing playing</div>
+              <div id="playerSub" class="desc">Click any item to play</div>
+            </div>
+          </div>
+
+          <audio id="mainAudio" controls preload="none">
+            <source id="audioSource" src="" type="audio/mpeg">
+            Your browser doesn't support the audio element.
+          </audio>
+
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <button id="stopBtn" class="playbtn">Stop</button>
+            <div style="text-align:right;color:var(--muted);font-size:13px">Demo site — working audio included</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>Public-domain audio from <a href="https://librivox.org" target="_blank" style="color:#06b6d4">LibriVox</a> and Internet Archive. Official podcast embeds from Spotify & This American Life.</footer>
+  </div>
+
+  <script>
+    // ===== Public domain podcasts =====
+    const publicPodcasts = [
+      {
+        id: 'science',
+        title: 'Old Time Radio: Science Fiction',
+        subtitle: 'Classic sci-fi radio drama (public domain)',
+        art: 'SF',
+        src: 'https://ia800905.us.archive.org/17/items/OTRR_XMinusOne_Singles/XMinusOne_560424_TheMartianDeathMarch.mp3'
+      },
+      {
+        id: 'history',
+        title: 'Old Time Radio: History of WWII',
+        subtitle: 'Historic radio broadcast (public domain)',
+        art: 'WW',
+        src: 'https://ia803207.us.archive.org/17/items/WorldWarII_733/WWII-1941-12-09-PearlHarborAddress.mp3'
+      }
+    ];
+
+    // ===== Public domain audiobooks =====
+    const audiobooks = [
+      {
+        id: 'pp',
+        title: 'Pride and Prejudice — Chapter 1',
+        subtitle: 'Jane Austen — LibriVox recording',
+        art: 'PP',
+        src: 'https://ia800300.us.archive.org/26/items/pride_prejudice_librivox/prideprejudice_01_austen_64kb.mp3'
+      },
+      {
+        id: 'dracula',
+        title: 'Dracula — Chapter 1',
+        subtitle: 'Bram Stoker — LibriVox recording',
+        art: 'DR',
+        src: 'https://ia800300.us.archive.org/2/items/dracula_librivox/dracula_01_stoker_64kb.mp3'
+      }
+    ];
+
+    // ===== Official embedded players =====
+    const embeds = [
+      {
+        title: 'The Joe Rogan Experience (Spotify)',
+        embedHtml: `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/show/4rOoJ6Egrf8K2IrywzwOMk?utm_source=generator" width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>`
+      },
+      {
+        title: 'This American Life (Spotify)',
+        embedHtml: `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/show/2XcYt6OsY0GHyFmgBd0F5i?utm_source=generator" width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>`
+      },
+      {
+        title: 'The Daily (Spotify)',
+        embedHtml: `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/show/2GmQ7U4JV7JNXoRmz54XfM?utm_source=generator" width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>`
+      }
+    ];
+
+    const publicPodcastList = document.getElementById('publicPodcastList');
+    const audiobookList = document.getElementById('audiobookList');
+    const embedList = document.getElementById('embedList');
+    const embedContainer = document.getElementById('embedContainer');
+    const mainAudio = document.getElementById('mainAudio');
+    const audioSource = document.getElementById('audioSource');
+    const playerTitle = document.getElementById('playerTitle');
+    const playerSub = document.getElementById('playerSub');
+    const playerThumb = document.getElementById('playerThumb');
+    const stopBtn = document.getElementById('stopBtn');
+
+    function makeItem(item){
+      const el = document.createElement('div');
+      el.className = 'item';
+      el.innerHTML = `
+        <div class="thumb">${item.art}</div>
+        <div class="meta">
+          <div class="title">${item.title}</div>
+          <div class="desc">${item.subtitle}</div>
+        </div>
+        <button class="playbtn">Play</button>
+      `;
+      el.addEventListener('click', ()=> playAudio(item));
+      el.querySelector('.playbtn').addEventListener('click', (e)=>{e.stopPropagation(); playAudio(item)});
+      return el;
+    }
+
+    publicPodcasts.forEach(p => publicPodcastList.appendChild(makeItem(p)));
+    audiobooks.forEach(a => audiobookList.appendChild(makeItem(a)));
+
+    embeds.forEach(e=>{
+      const el = document.createElement('div');
+      el.className='item';
+      el.innerHTML = `<div class="meta"><div class="title">${e.title}</div></div>`;
+      el.addEventListener('click', ()=>{
+        embedContainer.innerHTML = e.embedHtml;
+      });
+      embedList.appendChild(el);
+    });
+
+    function playAudio(item){
+      audioSource.src = item.src;
+      mainAudio.load();
+      mainAudio.play().catch(err=>console.warn(err));
+      playerTitle.textContent = item.title;
+      playerSub.textContent = item.subtitle;
+      playerThumb.textContent = item.art;
+    }
+
+    stopBtn.addEventListener('click', ()=>{
+      mainAudio.pause();
+      mainAudio.currentTime = 0;
+      playerTitle.textContent = 'Nothing playing';
+      playerSub.textContent = 'Click any item to play';
+      playerThumb.textContent = '♪';
+    });
+  </script>
+</body>
+</html>
