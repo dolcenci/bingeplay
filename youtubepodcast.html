@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BingePlay Podcasts</title>
+  <style>
+    
+  
+  /* Add this to your existing styles.css   <link rel="stylesheet" href="styles.css">
+     */
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(560px, 1fr));
+    gap: 1rem;
+    justify-content: center;
+    padding: 1rem;
+}
+
+iframe {
+    width: 100%;
+    height: 315px;
+    border: none;
+}
+    </style>
+
+     
+</head>
+<body>
+    <header>
+        <h1>BingePlay Podcasts</h1>
+        <nav>
+            <a href="#podcasts">Podcasts</a>
+            <a href="#audiobooks">Audiobooks</a>
+            <a href="#youtube-podcasts">YouTube Podcasts</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Podcasts Section -->
+        <section id="podcasts">
+            <h2>Top Podcasts</h2>
+            <div class="list" id="podcast-list">
+                <!-- Podcasts will be added here dynamically -->
+            </div>
+        </section>
+
+        <!-- Audiobooks Section -->
+        <section id="audiobooks">
+            <h2>Audiobooks</h2>
+            <div class="list" id="audiobook-list">
+                <!-- Audiobooks will be added here dynamically -->
+            </div>
+        </section>
+
+        <!-- YouTube Podcasts Section -->
+        <section id="youtube-podcasts">
+            <h2>Top 5 YouTube Podcasts</h2>
+            <div class="video-grid">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/ik0qT06pFHI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/ik0qT06pFHI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/ik0qT06pFHI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/ik0qT06pFHI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/ik0qT06pFHI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 BingePlay</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
